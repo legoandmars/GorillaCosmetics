@@ -45,7 +45,9 @@ SelectedHat = Top Hat
 
 # For Model Creators
 
-If you'd like to create Materials or Hats, the unity project will be published very soon.
+If you'd like to create Materials or Hats, the unity project can be found here: https://github.com/legoandmars/GorillaCosmeticsUnityProject
+
+More detailed information is found in the Unity Project's README.
 
 # For Developers
 This project is built with C# using .NET Standard.
