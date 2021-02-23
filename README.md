@@ -4,13 +4,17 @@ A PC cosmetic mod for Gorilla Tag that allows customizing the look of gorillas w
 
 ![An example of a custom gorilla](https://user-images.githubusercontent.com/34404266/108779287-7c9a8400-751b-11eb-8a9c-e279aaddf6dc.png)
 
-# Usage
+## Installation
 
 If your game isn't modded with BepinEx, DO THAT FIRST! Simply go to the [latest BepinEx release](https://github.com/BepInEx/BepInEx/releases) and extract BepinEx_x64_VERSION.zip directly into your game's folder, then run the game once to install BepinEx properly.
 
 Next, go to the [latest release of this mod](https://github.com/legoandmars/GorillaCosmetics/releases/latest) and extract it directly into your game's folder. Make sure it's extracted directly into your game's folder and not into a subfolder!
 
-The mod is now installed! If you'd like to change what cosmetics you have selected, run the game once to generate a config found in `Gorilla Tag/BepInEx/config/GorillaCosmetics.cfg`
+The mod is now installed!
+
+## Configuration
+
+ If you'd like to change what cosmetics you have selected, run the game once to generate a config found in `Gorilla Tag/BepInEx/config/GorillaCosmetics.cfg`
 
 The config should be mostly self-explanatory, but here's a quick rundown of what each option does:
 ```
@@ -43,13 +47,13 @@ SelectedInfectedMaterial = Default
 SelectedHat = Top Hat
 ```
 
-# For Model Creators
+## For Model Creators
 
 If you'd like to create Materials or Hats, the unity project can be found here: https://github.com/legoandmars/GorillaCosmeticsUnityProject
 
 More detailed information is found in the Unity Project's README.
 
-# For Developers
+## For Developers
 This project is built with C# using .NET Standard.
 
 For references, create a Libs folder in the same folder as the project solution. Inside of this folder you'll need to copy:
