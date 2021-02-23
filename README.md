@@ -12,6 +12,10 @@ Next, go to the [latest release of this mod](https://github.com/legoandmars/Gori
 
 The mod is now installed!
 
+If you'd like to install gorilla materials that people have made that don't come with the mod, drag the `.gmat` file into your `Gorilla Tag/BepInEx/Materials` folder.
+
+If you'd like to install hats that people have made that don't come with the mod, drag the `.hat` file into your `Gorilla Tag/BepInEx/Hats` folder.
+
 ## Configuration
 
  If you'd like to change what cosmetics you have selected, run the game once to generate a config found in `Gorilla Tag/BepInEx/config/GorillaCosmetics.cfg`
