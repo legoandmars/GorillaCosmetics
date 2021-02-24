@@ -33,14 +33,6 @@ namespace GorillaCosmetics
             // Load Cosmetics
             AssetLoader.Load();
 
-            // Load Mirror
-            string folder = System.IO.Path.GetDirectoryName(typeof(GorillaCosmetics).Assembly.Location);
-            GameObject Mirror = Instantiate(AssetBundle.LoadFromFile($"{folder}\\Misc\\Mirror").LoadAsset<GameObject>("_Hat"));
-            Mirror.transform.localScale = new Vector3(0.29f, 0.29f, 0.29f);
-            Mirror.transform.position = new Vector3(-68.5f, 11.96f, -81.595f);
-            Mirror.transform.rotation = Quaternion.Euler(0.21f, -153.2f, -4.6f);
-            DontDestroyOnLoad(Mirror);
-
             // Harmony Patches
             GorillaCosmeticsPatches.ApplyHarmonyPatches();
         }

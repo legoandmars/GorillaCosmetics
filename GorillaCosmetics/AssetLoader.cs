@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Collections;
 using GorillaCosmetics.Data;
+using GorillaCosmetics.Data.Previews;
 
 namespace GorillaCosmetics
 {
@@ -16,9 +17,9 @@ namespace GorillaCosmetics
         static string HatsLocation = "Hats";
 
         public static bool Loaded = false;
-        public static int selectedMaterial = 0; // TODO: better selection with UI
+        public static int selectedMaterial = 0;
         public static int selectedInfectedMaterial = 0; // TODO: better selection with UI
-        public static int selectedHat = 0; // TODO: better selection with UI
+        public static int selectedHat = 0;
 
         public static IEnumerable<string> MaterialFiles { get; private set; } = Enumerable.Empty<string>();
         public static IList<GorillaMaterial> GorillaMaterialObjects { get; private set; }
@@ -46,28 +47,55 @@ namespace GorillaCosmetics
             if (Loaded) return;
             string folder = Path.GetDirectoryName(typeof(GorillaCosmetics).Assembly.Location);
 
-            // materials
+            // Load Materials
             IEnumerable<string> filter = new List<string> { "*.material", "*.gmat" };
             MaterialFiles = GetFileNames($"{folder}\\{MaterialsLocation}", filter, SearchOption.TopDirectoryOnly, false);
             GorillaMaterialObjects = LoadMaterials(MaterialFiles);
 
-            // hats
+            // Load Hats
             IEnumerable<string> hatFilter = new List<string> { "*.hat", "*.ghat" };
             HatFiles = GetFileNames($"{folder}\\{HatsLocation}", hatFilter, SearchOption.TopDirectoryOnly, false);
             GorillaHatObjects = LoadHats(HatFiles);
 
-            //config parsing
+            // Parse Configs
             selectedMaterial = SelectedMaterialFromConfig(GorillaCosmetics.selectedMaterial.Value);
             selectedInfectedMaterial = SelectedMaterialFromConfig(GorillaCosmetics.selectedInfectedMaterial.Value);
             selectedHat = SelectedHatFromConfig();
 
-            // load previews
+            // Load Mirror
+            GameObject Mirror = UnityEngine.Object.Instantiate(AssetBundle.LoadFromFile($"{folder}\\Misc\\Mirror").LoadAsset<GameObject>("_Hat"));
+            Mirror.transform.localScale = new Vector3(0.29f, 0.29f, 0.29f);
+            Mirror.transform.position = new Vector3(-68.5f, 11.96f, -81.595f);
+            Mirror.transform.rotation = Quaternion.Euler(0.21f, -153.2f, -4.6f);
+            UnityEngine.Object.DontDestroyOnLoad(Mirror);
+
+            // Load Hat Rack
+            GameObject HatRack = UnityEngine.Object.Instantiate(AssetBundle.LoadFromFile($"{folder}\\Misc\\HatRack").LoadAsset<GameObject>("_Hat"));
+            HatRack.transform.localScale = new Vector3(3.696f, 3.696f, 0.677f);
+            HatRack.transform.position = new Vector3(-68.003f, 11.471f, -80.637f);
+            HatRack.transform.rotation = Quaternion.Euler(-90f, 0, 0);
+            UnityEngine.Object.DontDestroyOnLoad(HatRack);
+
+            // Load Material Previews
             float scale = (0.8f/GorillaMaterialObjects.Count);
             for (int i = 0; i < GorillaMaterialObjects.Count; i++)
             {
                 var material = GorillaMaterialObjects[i];
                 Vector3 pos = new Vector3(-68.287f, 12.04f - (scale*i), -81.251f);
                 new MaterialPreview(material, pos, scale*0.85f);
+            }
+
+            // Load Hat Rack Previews
+            Collider[] hatPosColliders = HatRack.transform.GetComponentsInChildren<Collider>();
+
+            System.Random random = new System.Random();
+            Collider[] RandomColliderArray = hatPosColliders.OrderBy(x => random.Next()).ToArray();
+
+            for (int i = 0; i < Math.Min(GorillaHatObjects.Count, 6); i++)
+            {
+                var hat = GorillaHatObjects[i];
+                Vector3 pos = new Vector3(-68.287f, 12.04f - (scale * i), -81.251f);
+                new HatPreview(hat, RandomColliderArray[i]);
             }
 
             Loaded = true;

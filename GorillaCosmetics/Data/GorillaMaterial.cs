@@ -33,6 +33,14 @@ namespace GorillaCosmetics.Data
                     Debug.Log(err);
                 }
             }
+            else
+            {
+                // try to load the default material
+                Descriptor = new GorillaMaterialDescriptor();
+                Descriptor.MaterialName = "Default";
+                Descriptor.CustomColors = true;
+                Material = Resources.Load<Material>("objects/materials/lightfur");
+            }
         }
     }
 }

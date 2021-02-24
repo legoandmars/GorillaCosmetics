@@ -24,6 +24,10 @@ namespace GorillaCosmetics.Data
                     FileName = path;
                     AssetBundle = AssetBundle.LoadFromFile(path);
                     Hat = AssetBundle.LoadAsset<GameObject>("_Hat");
+                    foreach(Collider collider in Hat.GetComponentsInChildren<Collider>())
+                    {
+                        collider.enabled = false; // Disable colliders. They can be left in accidentally and cause some really weird issues.
+                    }
                     Descriptor = Hat.GetComponent<HatDescriptor>();
                 }
                 catch (Exception err)

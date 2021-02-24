@@ -1,4 +1,5 @@
-﻿using GorillaLocomotion;
+﻿using GorillaCosmetics.Utils;
+using GorillaLocomotion;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -29,7 +30,8 @@ namespace GorillaCosmetics.Data.Behaviours
 						GorillaCosmetics.selectedMaterial.Value = "Default";
 						AssetLoader.selectedMaterial = 0;
 					}
-					GorillaTagger.Instance.offlineVRRig.ChangeMaterial(GorillaTagger.Instance.offlineVRRig.setMatIndex);
+					CosmeticUtils.RefreshAllPlayers();
+					//GorillaTagger.Instance.offlineVRRig.ChangeMaterial(GorillaTagger.Instance.offlineVRRig.setMatIndex);
 				}
 				if (component != null)
 				{
