@@ -61,6 +61,15 @@ namespace GorillaCosmetics
             selectedInfectedMaterial = SelectedMaterialFromConfig(GorillaCosmetics.selectedInfectedMaterial.Value);
             selectedHat = SelectedHatFromConfig();
 
+            // load previews
+            float scale = (0.8f/GorillaMaterialObjects.Count);
+            for (int i = 0; i < GorillaMaterialObjects.Count; i++)
+            {
+                var material = GorillaMaterialObjects[i];
+                Vector3 pos = new Vector3(-68.287f, 12.04f - (scale*i), -81.251f);
+                new MaterialPreview(material, pos, scale*0.85f);
+            }
+
             Loaded = true;
         }
 
