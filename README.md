@@ -6,6 +6,11 @@ A PC cosmetic mod for Gorilla Tag that allows customizing the look of gorillas w
 
 ## Installation
 
+### Automatic installation
+If you don't want to manually install, you can install this mod with the [Monke Mod Manager](https://github.com/DeadlyKitten/MonkeModManager/releases/latest)
+
+### Manual Installation
+
 If your game isn't modded with BepinEx, DO THAT FIRST! Simply go to the [latest BepinEx release](https://github.com/BepInEx/BepInEx/releases) and extract BepinEx_x64_VERSION.zip directly into your game's folder, then run the game once to install BepinEx properly.
 
 Next, go to the [latest release of this mod](https://github.com/legoandmars/GorillaCosmetics/releases/latest) and extract it directly into your game's folder. Make sure it's extracted directly into your game's folder and not into a subfolder!
@@ -18,7 +23,9 @@ If you'd like to install hats that people have made that don't come with the mod
 
 ## Configuration
 
- If you'd like to change what cosmetics you have selected, run the game once to generate a config found in `Gorilla Tag/BepInEx/config/GorillaCosmetics.cfg`
+Gorilla Cosmetics currently comes with an in-game mirror that allows you to select your hat and material.
+
+If you'd like to change one of the options not available ingame or manually change what cosmetics you have selected, you can edit the config found in `Gorilla Tag/BepInEx/config/GorillaCosmetics.cfg` (The game must be run *at least once* after installing the mod for this file to be generated)
 
 The config should be mostly self-explanatory, but here's a quick rundown of what each option does:
 ```
@@ -67,17 +74,14 @@ For references, create a Libs folder in the same folder as the project solution.
 BepInEx.dll
 BepInEx.Harmony.dll
 ``` 
-from `Gorilla Tag\BepInEx\plugins`, and
+from `Gorilla Tag\BepInEx\core`, and
 ```
 Assembly-CSharp.dll
-Photon3Unity3D.dll
 PhotonRealtime.dll
 PhotonUnityNetworking.dll
 UnityEngine.dll
 UnityEngine.AssetBundleModule.dll
 UnityEngine.CoreModule.dll
 UnityEngine.PhysicsModule.dll
-UnityEngine.VRModule.dll 
-UnityEngine.XRModule.dll 
 ``` 
 from `Gorilla Tag\Gorilla Tag_Data\Managed`.
