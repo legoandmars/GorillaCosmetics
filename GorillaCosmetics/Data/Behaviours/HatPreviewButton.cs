@@ -28,6 +28,9 @@ namespace GorillaCosmetics.Data.Behaviours
 					else
 					{
 						// default hat stuff
+						Debug.Log("Swapping to default hat");
+						GorillaCosmetics.selectedHat.Value = "Default";
+						AssetLoader.selectedHat = 0;
 					}
 					CosmeticUtils.RefreshAllPlayers();
 				}

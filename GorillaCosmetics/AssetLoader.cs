@@ -76,6 +76,16 @@ namespace GorillaCosmetics
             HatRack.transform.rotation = Quaternion.Euler(-90f, 0, 0);
             UnityEngine.Object.DontDestroyOnLoad(HatRack);
 
+            // Check if we have enough hats for a second one
+            GameObject HatRack2 = null;
+            if(GorillaHatObjects.Count > 6)
+            {
+                HatRack2 = UnityEngine.Object.Instantiate(HatRack);
+                HatRack2.transform.position = new Vector3(-67.895f, 11.511f, -80.41f);
+                HatRack2.transform.rotation = Quaternion.Euler(-90f, 0, -68.608f);
+                UnityEngine.Object.DontDestroyOnLoad(HatRack2);
+            }
+
             // Load Material Previews
             float scale = (0.8f/GorillaMaterialObjects.Count);
             for (int i = 0; i < GorillaMaterialObjects.Count; i++)
@@ -94,8 +104,21 @@ namespace GorillaCosmetics
             for (int i = 0; i < Math.Min(GorillaHatObjects.Count, 6); i++)
             {
                 var hat = GorillaHatObjects[i];
-                Vector3 pos = new Vector3(-68.287f, 12.04f - (scale * i), -81.251f);
                 new HatPreview(hat, RandomColliderArray[i]);
+            }
+
+            // Load Hat Rack Preview Again, if needed
+            if(HatRack2 != null)
+            {
+                Collider[] hatPosColliders2 = HatRack2.transform.GetComponentsInChildren<Collider>();
+
+                Collider[] RandomColliderArray2 = hatPosColliders2.OrderBy(x => random.Next()).ToArray();
+
+                for (int i = 6; i < Math.Min(GorillaHatObjects.Count, 12); i++)
+                {
+                    var hat = GorillaHatObjects[i];
+                    new HatPreview(hat, RandomColliderArray2[i-6]);
+                }
             }
 
             Loaded = true;
