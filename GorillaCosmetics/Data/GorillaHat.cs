@@ -1,7 +1,5 @@
 ﻿using GorillaCosmetics.Data.Descriptors;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace GorillaCosmetics.Data

@@ -1,10 +1,8 @@
-﻿using System;
-using System.IO;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Configuration;
 using GorillaCosmetics.HarmonyPatches;
+using System.IO;
 using UnityEngine;
-using UnityEngine.XR;
 
 namespace GorillaCosmetics
 {

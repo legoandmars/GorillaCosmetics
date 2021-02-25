@@ -1,10 +1,5 @@
-﻿using GorillaCosmetics.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using GorillaCosmetics.Utils;
 using HarmonyLib;
-using UnityEngine;
-using GorillaCosmetics.Utils;
 
 namespace GorillaCosmetics.HarmonyPatches.Patches
 {

@@ -1,6 +1,6 @@
 ﻿using GorillaCosmetics.Data.Behaviours;
-using UnityEngine;
 using System.IO;
+using UnityEngine;
 
 namespace GorillaCosmetics.Data.Previews
 {

@@ -17,9 +17,6 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\Libs\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Photon3Unity3D">
-      <HintPath>..\Libs\Photon3Unity3D.dll</HintPath>
-    </Reference>
     <Reference Include="PhotonRealtime">
       <HintPath>..\Libs\PhotonRealtime.dll</HintPath>
     </Reference>
@@ -37,12 +34,6 @@
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
       <HintPath>..\Libs\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.VRModule">
-      <HintPath>..\Libs\UnityEngine.VRModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.XRModule">
-      <HintPath>..\Libs\UnityEngine.XRModule.dll</HintPath>
     </Reference>
   </ItemGroup>
 

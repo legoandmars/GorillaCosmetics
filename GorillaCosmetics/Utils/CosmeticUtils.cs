@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GorillaCosmetics.Data;
+﻿using GorillaCosmetics.Data;
 using UnityEngine;
 
 namespace GorillaCosmetics.Utils

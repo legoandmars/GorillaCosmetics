@@ -1,8 +1,4 @@
-﻿using GorillaCosmetics.HarmonyPatches.Patches;
-using GorillaCosmetics.Utils;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using GorillaCosmetics.Utils;
 using UnityEngine;
 
 namespace GorillaCosmetics.Data.Behaviours
