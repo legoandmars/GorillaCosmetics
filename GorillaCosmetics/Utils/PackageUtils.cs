@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using GorillaCosmetics.Data.Descriptors;
 using GorillaCosmetics.Data;
+using Newtonsoft.Json;
 
 namespace GorillaCosmetics.Utils
 {
@@ -23,15 +24,7 @@ namespace GorillaCosmetics.Utils
                 {
                     var stream = new StreamReader(jsonEntry.Open(), Encoding.Default);
                     string jsonString = stream.ReadToEnd();
-                    json = JsonUtility.FromJson<PackageJSON>(jsonString);
-                    // potentially the worst thing i've ever written, please do not let this see the light of day ever
-                    // jesus christ
-                    string descriptorString = jsonString.Split(new string[] { "\"descriptor\": " }, StringSplitOptions.None)[1];
-                    descriptorString = descriptorString.Substring(0, descriptorString.IndexOf("},") + 1);
-                    string configString = jsonString.Split(new string[] { "\"config\": " }, StringSplitOptions.None)[1];
-                    configString = configString.Substring(0, configString.IndexOf("}") + 1);
-                    json.descriptor = JsonUtility.FromJson<Descriptor>(descriptorString);
-                    json.config = JsonUtility.FromJson<Config>(configString);
+                    json = JsonConvert.DeserializeObject<PackageJSON>(jsonString);
                 }
                 foreach (ZipArchiveEntry entry in archive.Entries)
                 {
