@@ -1,5 +1,6 @@
 ﻿using GorillaCosmetics.Data;
 using GorillaCosmetics.Data.Previews;
+using GorillaCosmetics.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -61,14 +62,14 @@ namespace GorillaCosmetics
             selectedHat = SelectedHatFromConfig();
 
             // Load Mirror
-            GameObject Mirror = UnityEngine.Object.Instantiate(AssetBundle.LoadFromFile($"{folder}\\Misc\\Mirror").LoadAsset<GameObject>("_Hat"));
+            GameObject Mirror = UnityEngine.Object.Instantiate(PackageUtils.AssetBundleFromPackage($"{folder}\\Misc\\Mirror").LoadAsset<GameObject>("_Hat"));
             Mirror.transform.localScale = new Vector3(0.29f, 0.29f, 0.29f);
             Mirror.transform.position = new Vector3(-68.5f, 11.96f, -81.595f);
             Mirror.transform.rotation = Quaternion.Euler(0.21f, -153.2f, -4.6f);
             UnityEngine.Object.DontDestroyOnLoad(Mirror);
 
             // Load Hat Rack
-            GameObject HatRack = UnityEngine.Object.Instantiate(AssetBundle.LoadFromFile($"{folder}\\Misc\\HatRack").LoadAsset<GameObject>("_Hat"));
+            GameObject HatRack = UnityEngine.Object.Instantiate(PackageUtils.AssetBundleFromPackage($"{folder}\\Misc\\HatRack").LoadAsset<GameObject>("_Hat"));
             HatRack.transform.localScale = new Vector3(3.696f, 3.696f, 0.677f);
             HatRack.transform.position = new Vector3(-68.003f, 11.471f, -80.637f);
             HatRack.transform.rotation = Quaternion.Euler(-90f, 0, 0);

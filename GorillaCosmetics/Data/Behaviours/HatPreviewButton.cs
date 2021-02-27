@@ -14,7 +14,7 @@ namespace GorillaCosmetics.Data.Behaviours
 				// do stuff
 				if (hat != null)
 				{
-					if (hat.Descriptor != null)
+					if (hat.Descriptor?.HatName != null)
 
 					{
 						Debug.Log("Swapping to: " + hat.Descriptor.HatName);
