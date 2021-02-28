@@ -14,7 +14,7 @@ namespace GorillaCosmetics.Data.Behaviours
 				// do stuff
 				if(material != null)
 				{
-					if(material.Descriptor != null)
+					if(material.Descriptor.MaterialName != null)
 					{
 						Debug.Log("Swapping to: " + material.Descriptor.MaterialName);
 						GorillaCosmetics.selectedMaterial.Value = material.Descriptor.MaterialName;

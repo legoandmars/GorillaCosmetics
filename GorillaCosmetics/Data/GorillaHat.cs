@@ -1,4 +1,5 @@
 ﻿using GorillaCosmetics.Data.Descriptors;
+using GorillaCosmetics.Utils;
 using System;
 using UnityEngine;
 
@@ -18,15 +19,21 @@ namespace GorillaCosmetics.Data
             {
                 try
                 {
-                    // load
                     FileName = path;
-                    AssetBundle = AssetBundle.LoadFromFile(path);
+                    var bundleAndJson = PackageUtils.AssetBundleAndJSONFromPackage(FileName);
+                    AssetBundle = bundleAndJson.bundle;
+                    PackageJSON json = bundleAndJson.json;
+
+                    // get material object and stuff
                     Hat = AssetBundle.LoadAsset<GameObject>("_Hat");
-                    foreach(Collider collider in Hat.GetComponentsInChildren<Collider>())
+                    foreach (Collider collider in Hat.GetComponentsInChildren<Collider>())
                     {
                         collider.enabled = false; // Disable colliders. They can be left in accidentally and cause some really weird issues.
                     }
-                    Descriptor = Hat.GetComponent<HatDescriptor>();
+
+                    // Make Descriptor
+                    Descriptor = PackageUtils.ConvertJsonToHat(json);
+                    Debug.Log(Descriptor.AuthorName);
                 }
                 catch (Exception err)
                 {
