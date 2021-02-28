@@ -13,6 +13,8 @@ If you don't want to manually install, you can install this mod with the [Monke 
 
 If your game isn't modded with BepinEx, DO THAT FIRST! Simply go to the [latest BepinEx release](https://github.com/BepInEx/BepInEx/releases) and extract BepinEx_x64_VERSION.zip directly into your game's folder, then run the game once to install BepinEx properly.
 
+This mod also depends on Newtonsoft.Json, so go to my latest [Newtonsoft.Json release](https://github.com/legoandmars/Newtonsoft.Json/releases/latest) and follow the instructions there.
+
 Next, go to the [latest release of this mod](https://github.com/legoandmars/GorillaCosmetics/releases/latest) and extract it directly into your game's folder. Make sure it's extracted directly into your game's folder and not into a subfolder!
 
 The mod is now installed!
@@ -67,12 +69,13 @@ More detailed information is found in the Unity Project's README.
 ## For Developers
 This project is built with C# using .NET Standard.
 
-For references, create a Libs folder in the same folder as the project solution. Inside of this folder you'll need to copy:
+Make sure to install the mod first so you have all of the required files. For references, create a Libs folder in the same folder as the project solution. Inside of this folder you'll need to copy:
 
 ```
 0Harmony.dll
 BepInEx.dll
 BepInEx.Harmony.dll
+Newtonsoft.Json
 ``` 
 from `Gorilla Tag\BepInEx\core`, and
 ```
