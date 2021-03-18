@@ -24,6 +24,7 @@ namespace GorillaCosmetics
         public static IList<GorillaMaterial> GorillaMaterialObjects { get; private set; }
         public static IEnumerable<string> HatFiles { get; private set; } = Enumerable.Empty<string>();
         public static IList<GorillaHat> GorillaHatObjects { get; private set; }
+        public static GorillaMaterial DefaultTagMaterial { get; private set; }
 
         public static GorillaMaterial SelectedMaterial()
         {
@@ -33,6 +34,7 @@ namespace GorillaCosmetics
         public static GorillaMaterial SelectedInfectedMaterial()
         {
             if (!Loaded) return null;
+            if (selectedInfectedMaterial == 0) return DefaultTagMaterial;
             return GorillaMaterialObjects[selectedInfectedMaterial];
         }
         public static GorillaHat SelectedHat()
@@ -119,6 +121,14 @@ namespace GorillaCosmetics
                     new HatPreview(hat, RandomColliderArray2[i-6]);
                 }
             }
+
+            // Load lava skin as a backup
+            Material lavaMat = CosmeticUtils.GetMaterials().First(mat => mat.name == "infected");
+            DefaultTagMaterial = new GorillaMaterial("Default");
+            DefaultTagMaterial.Material = null;
+            DefaultTagMaterial.Descriptor.MaterialName = "Lava";
+            DefaultTagMaterial.Descriptor.CustomColors = false;
+            if (lavaMat != null) DefaultTagMaterial.Material = lavaMat;
 
             Loaded = true;
         }

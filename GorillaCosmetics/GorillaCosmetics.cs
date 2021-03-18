@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GorillaCosmetics
 {
-    [BepInPlugin("org.legoandmars.gorillatag.gorillacosmetics", "Gorilla Cosmetics", "2.0.0")]
+    [BepInPlugin("org.legoandmars.gorillatag.gorillacosmetics", "Gorilla Cosmetics", "2.0.1")]
     public class GorillaCosmetics : BaseUnityPlugin
     {
         public static ConfigEntry<string> selectedMaterial;
@@ -15,7 +15,7 @@ namespace GorillaCosmetics
         public static ConfigEntry<bool> applyToOtherPlayers;
         public static ConfigEntry<bool> applyInfectedToOtherPlayers;
         public static ConfigEntry<bool> applyHatsToOtherPlayers;
-        void Awake()
+        void Start()
         {
             Debug.Log("Starting Gorilla Cosmetics");
 

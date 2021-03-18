@@ -1,10 +1,17 @@
 ﻿using GorillaCosmetics.Data;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace GorillaCosmetics.Utils
 {
     internal static class CosmeticUtils
     {
+        internal static List<Material> GetMaterials()
+        {
+            return Resources.FindObjectsOfTypeAll<Material>().ToList();
+        }
+
         public static void RefreshPlayer(VRRig __instance)
         {
             if (__instance)
@@ -71,6 +78,7 @@ namespace GorillaCosmetics.Utils
                 }
             }
         }
+
         internal static void ChangeHat(VRRig __instance)
         {
             Transform existingHat = __instance.head.rigTarget.Find("Hat");
