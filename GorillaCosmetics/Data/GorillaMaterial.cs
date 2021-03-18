@@ -1,6 +1,11 @@
 ﻿using GorillaCosmetics.Data.Descriptors;
 using System;
 using UnityEngine;
+using System.IO.Compression;
+using System.IO;
+using System.Linq;
+using System.Text;
+using GorillaCosmetics.Utils;
 
 namespace GorillaCosmetics.Data
 {
@@ -20,10 +25,16 @@ namespace GorillaCosmetics.Data
                 {
                     // load
                     FileName = path;
-                    AssetBundle = AssetBundle.LoadFromFile(path);
+                    var bundleAndJson = PackageUtils.AssetBundleAndJSONFromPackage(FileName);
+                    AssetBundle = bundleAndJson.bundle;
+                    PackageJSON json = bundleAndJson.json;
+
+                    // get material object and stuff
                     GameObject materialObject = AssetBundle.LoadAsset<GameObject>("_Material");
                     Material = materialObject.GetComponent<Renderer>().material;
-                    Descriptor = materialObject.GetComponent<GorillaMaterialDescriptor>();
+
+                    // Make Descriptor
+                    Descriptor = PackageUtils.ConvertJsonToMaterial(json);
                 }
                 catch (Exception err)
                 {
@@ -37,7 +48,7 @@ namespace GorillaCosmetics.Data
                 Descriptor = new GorillaMaterialDescriptor();
                 Descriptor.MaterialName = "Default";
                 Descriptor.CustomColors = true;
-                Material = Resources.Load<Material>("objects/materials/lightfur");
+                Material = Resources.Load<Material>("objects/treeroom/materials/lightfur");
             }
         }
     }

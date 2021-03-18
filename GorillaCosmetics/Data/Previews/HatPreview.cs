@@ -1,4 +1,5 @@
 ﻿using GorillaCosmetics.Data.Behaviours;
+using GorillaCosmetics.Utils;
 using System.IO;
 using UnityEngine;
 
@@ -21,7 +22,7 @@ namespace GorillaCosmetics.Data.Previews
                 // fake hat time
                 string folder = Path.GetDirectoryName(typeof(GorillaCosmetics).Assembly.Location);
 
-                gameObject = UnityEngine.Object.Instantiate(AssetBundle.LoadFromFile($"{folder}\\Misc\\None").LoadAsset<GameObject>("_Hat"));
+                gameObject = UnityEngine.Object.Instantiate(PackageUtils.AssetBundleFromPackage($"{folder}\\Misc\\None").LoadAsset<GameObject>("_Hat"));
             }
             gameObject.transform.SetParent(collider.transform);
             gameObject.transform.localPosition = Vector3.zero;
