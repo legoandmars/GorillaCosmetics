@@ -33,7 +33,6 @@ namespace GorillaCosmetics.Data
 
                     // Make Descriptor
                     Descriptor = PackageUtils.ConvertJsonToHat(json);
-                    Debug.Log(Descriptor.AuthorName);
                 }
                 catch (Exception err)
                 {

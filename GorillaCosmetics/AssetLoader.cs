@@ -146,7 +146,6 @@ namespace GorillaCosmetics
             {
                 UnityEngine.Object.Destroy(selectionTransform.gameObject);
             }
-            Debug.Log("YO2");
 
             for (int i = 0; i < rackCount; i++)
             {
@@ -173,18 +172,13 @@ namespace GorillaCosmetics
                     // create previews for the current 6 hats
                     for (int j = 0; j < 6; j++)
                     {
-                        Debug.Log("YO");
-                        Debug.Log(hatsLeft - index[j] - 1);
-                        Debug.Log(GorillaHatObjects.Count);
                         GorillaHat hat = GorillaHatObjects[hatsLeft - index[j] - 1];
                         Collider collider = hatPosColliders[j];
                         new HatPreview(hat, collider);
                     }
-                    Debug.Log("YOa");
                 }
                 else // if the last one (may or may not be full)
                 {
-                    Debug.Log("YOb");
                     // add to rack list
                     rackSelector.racks.Add(actualRack);
                     Collider[] hatPosColliders = actualRack.GetComponentsInChildren<Collider>();
@@ -204,7 +198,6 @@ namespace GorillaCosmetics
                     }
                 }
             }
-            Debug.Log("YO3");
             rackSelector.UpdateRack();
 
             // Load Material Previews
