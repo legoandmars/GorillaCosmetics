@@ -1,4 +1,5 @@
 ﻿using GorillaCosmetics.Data;
+using GorillaCosmetics.Data.Selectors;
 using GorillaCosmetics.Data.Previews;
 using GorillaCosmetics.Utils;
 using System;
@@ -63,64 +64,187 @@ namespace GorillaCosmetics
             selectedInfectedMaterial = SelectedMaterialFromConfig(GorillaCosmetics.selectedInfectedMaterial.Value);
             selectedHat = SelectedHatFromConfig();
 
+            // Disable old mirror and use it as a base
+            GameObject gameMirror = GameObject.Find("Level/treeroom/upper level/mirror");
+            gameMirror.SetActive(false);
+
             // Load Mirror
             GameObject Mirror = UnityEngine.Object.Instantiate(PackageUtils.AssetBundleFromPackage($"{folder}\\Misc\\Mirror").LoadAsset<GameObject>("_Hat"));
-            Mirror.transform.localScale = new Vector3(0.29f, 0.29f, 0.29f);
-            Mirror.transform.position = new Vector3(-68.5f, 11.96f, -81.595f);
+            Mirror.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+            Mirror.transform.position = gameMirror.transform.position + new Vector3(0, 0.55f, 0);
             Mirror.transform.rotation = Quaternion.Euler(0.21f, -153.2f, -4.6f);
             UnityEngine.Object.DontDestroyOnLoad(Mirror);
 
             // Load Hat Rack
             GameObject HatRack = UnityEngine.Object.Instantiate(PackageUtils.AssetBundleFromPackage($"{folder}\\Misc\\HatRack").LoadAsset<GameObject>("_Hat"));
-            HatRack.transform.localScale = new Vector3(3.696f, 3.696f, 0.677f);
-            HatRack.transform.position = new Vector3(-68.003f, 11.471f, -80.637f);
-            HatRack.transform.rotation = Quaternion.Euler(-90f, 0, 0);
+            HatRack.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+            HatRack.transform.position = Mirror.transform.position + new Vector3(-0.45f, -0.42f, -0.7f);
+            HatRack.transform.rotation = Quaternion.Euler(0, -70.0f, 0);
             UnityEngine.Object.DontDestroyOnLoad(HatRack);
+            // how many hats
+            int hatCount = GorillaHatObjects.Count;
+            // how many hats are on the last rack
+            int lastRackCount = hatCount % 6;
+            // how many racks are needed for that amount of hats
+            int rackCount = (hatCount / 6) + (lastRackCount == 0 ? 0 : 1);
 
-            // Check if we have enough hats for a second one
-            GameObject HatRack2 = null;
-            if(GorillaHatObjects.Count > 6)
+            Debug.Log($"Hat count: {hatCount}, rack count: {rackCount}, last rack hat count: {lastRackCount}");
+
+            // the actual rack transform, so this contains the 6 hats
+            // mesh is now seperate, so only the colliders are being switched out
+            Transform actualRackTransform = HatRack.transform.Find("HatRack");
+            Transform selectionTransform = HatRack.transform.Find("Selection");
+            GameObject actualRack = actualRackTransform.gameObject;
+            // add rack selector
+            HatRackSelector rackSelector = HatRack.AddComponent<HatRackSelector>();
+            if(rackCount > 1)
             {
-                HatRack2 = UnityEngine.Object.Instantiate(HatRack);
-                HatRack2.transform.position = new Vector3(-67.895f, 11.511f, -80.41f);
-                HatRack2.transform.rotation = Quaternion.Euler(-90f, 0, -68.608f);
-                UnityEngine.Object.DontDestroyOnLoad(HatRack2);
-            }
+                Collider[] buttonColliders = selectionTransform.gameObject.GetComponentsInChildren<Collider>(true);
 
-            // Load Material Previews
-            float scale = (0.8f/GorillaMaterialObjects.Count);
-            for (int i = 0; i < GorillaMaterialObjects.Count; i++)
-            {
-                var material = GorillaMaterialObjects[i];
-                Vector3 pos = new Vector3(-68.287f, 12.04f - (scale*i), -81.251f);
-                new MaterialPreview(material, pos, scale*0.85f);
-            }
-
-            // Load Hat Rack Previews
-            Collider[] hatPosColliders = HatRack.transform.GetComponentsInChildren<Collider>();
-
-            System.Random random = new System.Random();
-            Collider[] RandomColliderArray = hatPosColliders.OrderBy(x => random.Next()).ToArray();
-
-            for (int i = 0; i < Math.Min(GorillaHatObjects.Count, 6); i++)
-            {
-                var hat = GorillaHatObjects[i];
-                new HatPreview(hat, RandomColliderArray[i]);
-            }
-
-            // Load Hat Rack Preview Again, if needed
-            if(HatRack2 != null)
-            {
-                Collider[] hatPosColliders2 = HatRack2.transform.GetComponentsInChildren<Collider>();
-
-                Collider[] RandomColliderArray2 = hatPosColliders2.OrderBy(x => random.Next()).ToArray();
-
-                for (int i = 6; i < Math.Min(GorillaHatObjects.Count, 12); i++)
+                for (int i = 0; i < buttonColliders.Length; i++)
                 {
-                    var hat = GorillaHatObjects[i];
-                    new HatPreview(hat, RandomColliderArray2[i-6]);
+                    Collider collider = buttonColliders[i];
+                    HatRackSelectorButton button = collider.gameObject.AddComponent<HatRackSelectorButton>();
+
+                    // what selector does it apply to?
+                    button.selector = rackSelector;
+                    // should be trigger
+                    collider.isTrigger = true;
+                    // correct layer for buttons
+                    collider.gameObject.layer = 18;
+                }
+
+            }
+            else
+            {
+                UnityEngine.Object.Destroy(selectionTransform.gameObject);
+            }
+
+            for (int i = 0; i < rackCount; i++)
+            {
+                int hatsLeft = hatCount - (i * 6);
+                if (hatsLeft > 6) // if not the last rack
+                {
+                    GameObject theRack = UnityEngine.Object.Instantiate(actualRack);
+                    UnityEngine.Object.DontDestroyOnLoad(theRack);
+                    Transform theRackTransform = theRack.transform;
+                    theRack.transform.SetParent(HatRack.transform, false);
+
+                    // add to the rack selector list of racks
+                    rackSelector.racks.Add(theRack);
+
+                    Collider[] hatPosColliders = theRack.GetComponentsInChildren<Collider>();
+
+                    // randomize order
+
+                    var index = new List<int>();
+                    for (int k = 0; k < 6; k++) index.Add(k);
+                    var hatRackRandom = new System.Random();
+                    index = index.OrderBy(x => hatRackRandom.Next()).ToList();
+
+                    // create previews for the current 6 hats
+                    for (int j = 0; j < 6; j++)
+                    {
+                        GorillaHat hat = GorillaHatObjects[hatsLeft - index[j] - 1];
+                        Collider collider = hatPosColliders[j];
+                        new HatPreview(hat, collider);
+                    }
+                }
+                else // if the last one (may or may not be full)
+                {
+                    // add to rack list
+                    rackSelector.racks.Add(actualRack);
+                    Collider[] hatPosColliders = actualRack.GetComponentsInChildren<Collider>();
+
+                    // randomize order
+                    var index = new List<int>();
+                    for (int k = 0; k < hatsLeft; k++) index.Add(k);
+                    var hatRackRandom = new System.Random();
+                    index = index.OrderBy(x => hatRackRandom.Next()).ToList();
+
+                    // create previews
+                    for (int j = 0; j < hatsLeft; j++)
+                    {
+                        GorillaHat hat = GorillaHatObjects[index[j]];
+                        Collider collider = hatPosColliders[j];
+                        new HatPreview(hat, collider);
+                    }
                 }
             }
+            rackSelector.UpdateRack();
+
+            // Load Material Previews
+            int materialCount = GorillaMaterialObjects.Count;
+            int lastMaterialCount = materialCount % 10;
+            int materialPageCount = (materialCount / 10) + (lastMaterialCount == 0 ? 0 : 1);
+
+            Transform materialSelectionTransform = Mirror.transform.Find("Selection");
+            Transform previewTransform = Mirror.transform.Find("Preview");
+
+            HatRackSelector matSelector = Mirror.AddComponent<HatRackSelector>();
+            if (materialPageCount > 1)
+            {
+                Collider[] buttonColliders = materialSelectionTransform.gameObject.GetComponentsInChildren<Collider>(true);
+
+                for (int i = 0; i < buttonColliders.Length; i++)
+                {
+                    Collider collider = buttonColliders[i];
+                    HatRackSelectorButton button = collider.gameObject.AddComponent<HatRackSelectorButton>();
+
+                    // what selector does it apply to?
+                    button.selector = matSelector;
+                    // should be trigger
+                    collider.isTrigger = true;
+                    // correct layer for buttons
+                    collider.gameObject.layer = 18;
+                }
+
+            }
+            else
+            {
+                UnityEngine.Object.Destroy(materialSelectionTransform.gameObject);
+            }
+
+            for (int i = 0; i < materialPageCount; i++)
+            {
+                int materialsLeft = materialCount - (i * 10);
+                if (materialsLeft > 10) // if not the last rack
+                {
+                    GameObject thePage = UnityEngine.Object.Instantiate(previewTransform.gameObject);
+                    UnityEngine.Object.DontDestroyOnLoad(thePage);
+                    Transform thePageTransform = thePage.transform;
+                    thePage.transform.SetParent(Mirror.transform, false);
+
+                    // add to the rack selector list of racks
+                    matSelector.racks.Add(thePage);
+
+                    float scale = 0.21f;
+                    for (int j = 0; j < 10; j++)
+                    {
+                        int matIndex = materialsLeft - j - 1;
+                        GorillaMaterial material = GorillaMaterialObjects[matIndex];
+                        float height = (-0.5f * scale) - (scale * j) - 0.05f;
+                        Vector3 pos = new Vector3(0.0f, height, 0.0f);
+                        new MaterialPreview(material, thePageTransform, pos, scale * 0.85f);
+                    }
+                }
+                else // if the last one (may or may not be full)
+                {
+                    // create previews with a scale of at most 2.1f / 6, or till 0.21f
+                    float scale = 2.1f / (materialsLeft > 6 ? materialsLeft : 6);
+                    matSelector.racks.Add(previewTransform.gameObject);
+
+                    for (int j = 0; j < materialsLeft; j++)
+                    {
+                        int matIndex = j;
+                        GorillaMaterial material = GorillaMaterialObjects[matIndex];
+                        float height = (-0.5f * scale) - (scale * j) - 0.05f;
+                        Vector3 pos = new Vector3(0.0f, height, 0.0f);
+                        new MaterialPreview(material, previewTransform, pos, scale * 0.85f);
+                    }
+                }
+            }
+            matSelector.UpdateRack();
 
             // Load lava skin as a backup
             Material lavaMat = CosmeticUtils.GetMaterials().First(mat => mat.name == "infected");

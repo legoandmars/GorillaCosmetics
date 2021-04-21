@@ -27,10 +27,8 @@ namespace GorillaCosmetics.Data.Previews
             gameObject.transform.SetParent(collider.transform);
             gameObject.transform.localPosition = Vector3.zero;
             gameObject.transform.localRotation = Quaternion.identity;
-            gameObject.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+            gameObject.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
             gameObject.layer = 18;
-            gameObject.transform.SetParent(null);
-            gameObject.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
             UnityEngine.Object.DontDestroyOnLoad(gameObject);
             collider.isTrigger = true;
             collider.gameObject.layer = 18;
