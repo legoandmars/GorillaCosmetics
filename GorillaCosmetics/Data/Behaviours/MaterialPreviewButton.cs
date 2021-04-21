@@ -4,25 +4,39 @@ using UnityEngine;
 using System.Reflection;
 using Newtonsoft.Json;
 using Photon.Pun;
+using System.Collections;
+
 namespace GorillaCosmetics.Data.Behaviours
 {
     public class MaterialPreviewButton : GorillaTriggerBox
     {
 		public GorillaMaterial material;
+
+		static bool canPress = true;
 		private void OnTriggerEnter(Collider collider)
 		{
+			if (!canPress) return;
+
 			if (collider.GetComponentInParent<GorillaTriggerColliderHandIndicator>() != null)
 			{
 				GorillaTriggerColliderHandIndicator component = collider.GetComponent<GorillaTriggerColliderHandIndicator>();
 				// do stuff
 				if(material != null)
 				{
+					canPress = false;
 					string matName = material.Descriptor.MaterialName != null ? material.Descriptor.MaterialName : "Default";
 					Debug.Log("Swapping to: " + matName);
 					AssetLoader.SelectMaterial(matName);
 					GorillaCosmetics.selectedMaterial.Value = matName;
-
-					UpdateMaterialValue();
+					StartCoroutine(ButtonDelay());
+					try
+					{
+						UpdateMaterialValue();
+					}
+					catch
+					{
+						Debug.Log("Error selecting mat.");
+					}
 				}
 				if (component != null)
 				{
@@ -70,6 +84,12 @@ namespace GorillaCosmetics.Data.Behaviours
 				photonView.RPC("UpdateCosmetics", RpcTarget.All, new object[] { badge, face, hatMessage });
 				PhotonNetwork.SendAllOutgoingCommands();
 			}
+		}
+
+		private IEnumerator ButtonDelay()
+		{
+			yield return new WaitForSeconds(2f);
+			canPress = true;
 		}
 	}
 }

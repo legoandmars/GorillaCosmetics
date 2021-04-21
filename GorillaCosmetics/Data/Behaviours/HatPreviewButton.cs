@@ -3,26 +3,40 @@ using UnityEngine;
 using Newtonsoft.Json;
 using Photon.Pun;
 using System.Reflection;
+using System.Collections;
 
 namespace GorillaCosmetics.Data.Behaviours
 {
 	public class HatPreviewButton : GorillaTriggerBox
 	{
 		public GorillaHat hat;
+
+		static bool canPress = true;
+
 		private void OnTriggerEnter(Collider collider)
 		{
+			if (!canPress) return;
+
 			if (collider.GetComponentInParent<GorillaTriggerColliderHandIndicator>() != null)
 			{
 				GorillaTriggerColliderHandIndicator component = collider.GetComponent<GorillaTriggerColliderHandIndicator>();
 				// do stuff
 				if (hat != null)
 				{
+					canPress = false;
 					string hatName = hat.Descriptor.HatName != null && hat.Descriptor.HatName != "None" ? hat.Descriptor.HatName : "None";
 					Debug.Log("Swapping to: " + hatName);
 					AssetLoader.SelectHat(hatName);
 					GorillaCosmetics.selectedHat.Value = hatName;
-
-					UpdateHatValue();
+					StartCoroutine(ButtonDelay());
+					try
+					{
+						UpdateHatValue();
+					}
+					catch
+                    {
+						Debug.Log("Error selecting hat.");
+                    }
 				}
 				if (component != null)
 				{
@@ -62,6 +76,12 @@ namespace GorillaCosmetics.Data.Behaviours
 				photonView.RPC("UpdateCosmetics", RpcTarget.All, new object[] { badge, face, hatMessage });
 				PhotonNetwork.SendAllOutgoingCommands();
 			}
+		}
+
+		private IEnumerator ButtonDelay()
+		{
+			yield return new WaitForSeconds(2f);
+			canPress = true;
 		}
 	}
 }
