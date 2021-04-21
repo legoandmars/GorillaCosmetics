@@ -5,7 +5,7 @@ using HarmonyLib;
 
 namespace GorillaCosmetics.HarmonyPatches.Patches
 {
-    [HarmonyPatch(typeof(VRRig))]
+    /*[HarmonyPatch(typeof(VRRig))]
     [HarmonyPatch("ChangeMaterial", MethodType.Normal)]
     internal class VRRigChangeMaterialPatch
     {
@@ -23,5 +23,5 @@ namespace GorillaCosmetics.HarmonyPatches.Patches
         {
             CosmeticUtils.ChangeMaterial(__instance, __instance.setMatIndex);
         }
-    }
+    }*/
 }

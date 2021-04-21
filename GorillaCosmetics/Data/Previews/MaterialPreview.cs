@@ -8,12 +8,13 @@ namespace GorillaCosmetics.Data
         private GorillaMaterial material;
         private GameObject gameObject;
         private MaterialPreviewButton button;
-        public MaterialPreview(GorillaMaterial baseMaterial, Vector3 position, float scale) {
+        public MaterialPreview(GorillaMaterial baseMaterial, Transform parent, Vector3 position, float scale) {
             material = baseMaterial;
             gameObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             gameObject.layer = 18;
+            gameObject.transform.SetParent(parent);
             gameObject.transform.localScale = new Vector3(scale, scale, scale);
-            gameObject.transform.position = position;
+            gameObject.transform.localPosition = position;
             gameObject.transform.rotation = Quaternion.identity;
             UnityEngine.Object.DontDestroyOnLoad(gameObject);
 

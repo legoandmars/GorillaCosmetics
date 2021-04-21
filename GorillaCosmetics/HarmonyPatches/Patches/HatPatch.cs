@@ -3,7 +3,7 @@ using HarmonyLib;
 
 namespace GorillaCosmetics.HarmonyPatches.Patches
 {
-    [HarmonyPatch(typeof(VRRig))]
+    /*[HarmonyPatch(typeof(VRRig))]
     [HarmonyPatch("Start", MethodType.Normal)]
     internal class GorillaHatAwakePatch2
     {
@@ -11,5 +11,5 @@ namespace GorillaCosmetics.HarmonyPatches.Patches
         {
             CosmeticUtils.ChangeHat(__instance);
         }
-    }
+    }*/
 }
