@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GorillaCosmetics
 {
-    [BepInPlugin("org.legoandmars.gorillatag.gorillacosmetics", "Gorilla Cosmetics", "2.0.1")]
+    [BepInPlugin("org.legoandmars.gorillatag.gorillacosmetics", "Gorilla Cosmetics", "2.1.0")]
     public class GorillaCosmetics : BaseUnityPlugin
     {
         public static ConfigEntry<string> selectedMaterial;
