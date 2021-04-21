@@ -45,6 +45,27 @@ namespace GorillaCosmetics
             return GorillaHatObjects[selectedHat];
         }
 
+        public static void SelectMaterial(string name)
+        {
+            selectedMaterial = SelectedMaterialFromConfig(name);
+        }
+        public static void SelectHat(string name)
+        {
+            selectedHat = SelectedHatFromConfig(name);
+        }
+
+        public static GorillaMaterial GetMaterial(int index)
+        {
+            if (index > GorillaMaterialObjects.Count) return null;
+            return GorillaMaterialObjects[index];
+        }
+
+        public static GorillaHat GetHat(int index)
+        {
+            if (index > GorillaHatObjects.Count) return null;
+            return GorillaHatObjects[index];
+        }
+
         public async static void Load()
         {
             if (Loaded) return;
@@ -63,7 +84,7 @@ namespace GorillaCosmetics
             // Parse Configs
             selectedMaterial = SelectedMaterialFromConfig(GorillaCosmetics.selectedMaterial.Value);
             selectedInfectedMaterial = SelectedMaterialFromConfig(GorillaCosmetics.selectedInfectedMaterial.Value);
-            selectedHat = SelectedHatFromConfig();
+            selectedHat = SelectedHatFromConfig(GorillaCosmetics.selectedHat.Value);
 
             // Disable old mirror and use it as a base
             GameObject gameMirror = null;
@@ -268,6 +289,7 @@ namespace GorillaCosmetics
             if (lavaMat != null) DefaultTagMaterial.Material = lavaMat;
 
             Loaded = true;
+            CosmeticUtils.LocalLoadingCallback();
         }
 
         public static int SelectedMaterialFromConfig(string configString)
@@ -289,9 +311,9 @@ namespace GorillaCosmetics
             return 0;
         }
 
-        public static int SelectedHatFromConfig()
+        public static int SelectedHatFromConfig(string configString)
         {
-            string selectedHatString = GorillaCosmetics.selectedHat.Value.ToLower().Trim();
+            string selectedHatString = configString.ToLower().Trim();
             for (int i = 1; i < GorillaHatObjects.Count; i++)
             {
                 GorillaHat gorillaHatObject = GorillaHatObjects[i];

@@ -1,5 +1,8 @@
 ﻿using GorillaCosmetics.Utils;
 using UnityEngine;
+using Newtonsoft.Json;
+using Photon.Pun;
+using System.Reflection;
 
 namespace GorillaCosmetics.Data.Behaviours
 {
@@ -14,26 +17,50 @@ namespace GorillaCosmetics.Data.Behaviours
 				// do stuff
 				if (hat != null)
 				{
-					if (hat.Descriptor?.HatName != null)
+					string hatName = hat.Descriptor.HatName != null && hat.Descriptor.HatName != "None" ? hat.Descriptor.HatName : "None";
+					Debug.Log("Swapping to: " + hatName);
+					AssetLoader.SelectHat(hatName);
+					GorillaCosmetics.selectedHat.Value = hatName;
 
-					{
-						Debug.Log("Swapping to: " + hat.Descriptor.HatName);
-						GorillaCosmetics.selectedHat.Value = hat.Descriptor.HatName;
-						AssetLoader.selectedHat = AssetLoader.SelectedHatFromConfig();
-					}
-					else
-					{
-						// default hat stuff
-						Debug.Log("Swapping to default hat");
-						GorillaCosmetics.selectedHat.Value = "Default";
-						AssetLoader.selectedHat = 0;
-					}
-					CosmeticUtils.RefreshAllPlayers();
+					UpdateHatValue();
 				}
 				if (component != null)
 				{
 					GorillaTagger.Instance.StartVibration(component.isLeftHand, GorillaTagger.Instance.tapHapticStrength / 2f, GorillaTagger.Instance.tapHapticDuration);
 				}
+			}
+		}
+
+		void UpdateHatValue()
+        {
+			string name = hat.Descriptor.HatName;
+			string hatString = "custom:" + name;
+
+			GorillaTagger gorillaTagger = GorillaTagger.Instance;
+			VRRig offlineVRRig = gorillaTagger.offlineVRRig;
+			if (offlineVRRig == null) offlineVRRig = gorillaTagger.myVRRig; // this will probably break stuff. TOO BAD!
+
+			string hatCS = typeof(VRRig).GetField("hat", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(offlineVRRig) as string;
+			string face = typeof(VRRig).GetField("face", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(offlineVRRig) as string;
+			string badge = typeof(VRRig).GetField("badge", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(offlineVRRig) as string;
+
+			VRRigHatJSON hatJSON = new VRRigHatJSON();
+			hatJSON.hat = hatString;
+			hatJSON.material = AssetLoader.SelectedMaterial().Descriptor.MaterialName != null ? AssetLoader.SelectedMaterial().Descriptor.MaterialName : "Default";
+			string hatMessage = JsonConvert.SerializeObject(hatJSON);
+
+			if (offlineVRRig)
+			{
+				// locally update it
+				offlineVRRig.LocalUpdateCosmetics(badge, face, hatMessage);
+			}
+			VRRig myVRRig = gorillaTagger.myVRRig;
+			if (myVRRig)
+			{
+				PhotonView photonView = myVRRig.photonView;
+
+				photonView.RPC("UpdateCosmetics", RpcTarget.All, new object[] { badge, face, hatMessage });
+				PhotonNetwork.SendAllOutgoingCommands();
 			}
 		}
 	}
