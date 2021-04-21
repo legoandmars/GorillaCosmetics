@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using System.Threading.Tasks;
 
 namespace GorillaCosmetics
 {
@@ -44,7 +45,7 @@ namespace GorillaCosmetics
             return GorillaHatObjects[selectedHat];
         }
 
-        public static void Load()
+        public async static void Load()
         {
             if (Loaded) return;
             string folder = Path.GetDirectoryName(typeof(GorillaCosmetics).Assembly.Location);
@@ -65,7 +66,12 @@ namespace GorillaCosmetics
             selectedHat = SelectedHatFromConfig();
 
             // Disable old mirror and use it as a base
-            GameObject gameMirror = GameObject.Find("Level/treeroom/upper level/mirror");
+            GameObject gameMirror = null;
+            do {
+                gameMirror = GameObject.Find("Level/treeroom/upper level/mirror");
+                await Task.Delay(250);
+            } while (gameMirror == null);
+
             gameMirror.SetActive(false);
 
             // Load Mirror
@@ -119,6 +125,7 @@ namespace GorillaCosmetics
             {
                 UnityEngine.Object.Destroy(selectionTransform.gameObject);
             }
+            Debug.Log("YO2");
 
             for (int i = 0; i < rackCount; i++)
             {
@@ -145,13 +152,18 @@ namespace GorillaCosmetics
                     // create previews for the current 6 hats
                     for (int j = 0; j < 6; j++)
                     {
+                        Debug.Log("YO");
+                        Debug.Log(hatsLeft - index[j] - 1);
+                        Debug.Log(GorillaHatObjects.Count);
                         GorillaHat hat = GorillaHatObjects[hatsLeft - index[j] - 1];
                         Collider collider = hatPosColliders[j];
                         new HatPreview(hat, collider);
                     }
+                    Debug.Log("YOa");
                 }
                 else // if the last one (may or may not be full)
                 {
+                    Debug.Log("YOb");
                     // add to rack list
                     rackSelector.racks.Add(actualRack);
                     Collider[] hatPosColliders = actualRack.GetComponentsInChildren<Collider>();
@@ -171,6 +183,7 @@ namespace GorillaCosmetics
                     }
                 }
             }
+            Debug.Log("YO3");
             rackSelector.UpdateRack();
 
             // Load Material Previews

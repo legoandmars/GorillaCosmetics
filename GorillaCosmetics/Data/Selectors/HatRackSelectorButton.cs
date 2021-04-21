@@ -35,16 +35,13 @@ namespace GorillaCosmetics.Data.Selectors
                     GorillaTagger.Instance.StartVibration(component.isLeftHand, GorillaTagger.Instance.tapHapticStrength / 2f, GorillaTagger.Instance.tapHapticDuration);
                 }
 
-                ButtonDelay(this);
+                StartCoroutine(ButtonDelay(this));
             }
         }
         private IEnumerator ButtonDelay(HatRackSelectorButton button)
         {
-            while (true)
-            {
-                yield return new WaitForSeconds(0.150f);
-                button.canPress = true;
-            }
+            yield return new WaitForSeconds(0.150f);
+            button.canPress = true;
         }
 
     }
