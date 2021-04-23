@@ -38,6 +38,7 @@ namespace GorillaCosmetics.Data
                 {
                     // loading failed. that's not good.
                     Debug.Log(err);
+                    throw new Exception($"Loading hat at {path} failed.");
                 }
             }
         }

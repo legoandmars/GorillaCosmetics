@@ -86,7 +86,10 @@ namespace GorillaCosmetics.Data.Behaviours
 			}
 		}
 
-		private IEnumerator ButtonDelay()
+		private void OnDisable() => canPress = true;
+		private void OnDestroy() => canPress = true;
+
+		private static IEnumerator ButtonDelay()
 		{
 			yield return new WaitForSeconds(2f);
 			canPress = true;

@@ -40,6 +40,7 @@ namespace GorillaCosmetics.Data
                 {
                     // loading failed. that's not good.
                     Debug.Log(err);
+                    throw new Exception($"Loading material at {path} failed.");
                 }
             }
             else
