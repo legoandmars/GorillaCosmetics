@@ -223,9 +223,9 @@ namespace GorillaCosmetics.Utils
             VRRig offlineVRRig = gorillaTagger.offlineVRRig;
             if (offlineVRRig == null) offlineVRRig = gorillaTagger.myVRRig; // this will probably break stuff. TOO BAD!
 
-            string hatCS = typeof(VRRig).GetField("hat", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(offlineVRRig) as string;
-            string face = typeof(VRRig).GetField("face", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(offlineVRRig) as string;
-            string badge = typeof(VRRig).GetField("badge", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(offlineVRRig) as string;
+            string hatCS = offlineVRRig.hat;
+            string face = offlineVRRig.face;
+            string badge = offlineVRRig.badge;
 
             VRRigHatJSON hatJSON = new VRRigHatJSON();
             hatJSON.hat = hatCS;
@@ -241,7 +241,6 @@ namespace GorillaCosmetics.Utils
 
             hatJSON.material = material;
             string hatMessage = JsonConvert.SerializeObject(hatJSON);
-
             if (offlineVRRig)
             {
                 // locally update it
