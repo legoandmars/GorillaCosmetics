@@ -24,7 +24,7 @@ namespace GorillaCosmetics.Data.Behaviours
 				if(material != null)
 				{
 					canPress = false;
-					string matName = material.Descriptor.MaterialName != null ? material.Descriptor.MaterialName : "Default";
+					string matName = material.Descriptor?.MaterialName ?? "Default";
 					Debug.Log("Swapping to: " + matName);
 					AssetLoader.SelectMaterial(matName);
 					GorillaCosmetics.selectedMaterial.Value = matName;

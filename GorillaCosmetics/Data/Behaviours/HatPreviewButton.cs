@@ -23,7 +23,7 @@ namespace GorillaCosmetics.Data.Behaviours
 				if (hat != null)
 				{
 					canPress = false;
-					string hatName = hat.Descriptor.HatName != null && hat.Descriptor.HatName != "None" ? hat.Descriptor.HatName : "None";
+					string hatName = hat.Descriptor?.HatName ?? "None";
 					Debug.Log("Swapping to: " + hatName);
 					AssetLoader.SelectHat(hatName);
 					GorillaCosmetics.selectedHat.Value = hatName;
@@ -59,7 +59,7 @@ namespace GorillaCosmetics.Data.Behaviours
 
 			VRRigHatJSON hatJSON = new VRRigHatJSON();
 			hatJSON.hat = hatString;
-			hatJSON.material = AssetLoader.SelectedMaterial().Descriptor.MaterialName != null ? AssetLoader.SelectedMaterial().Descriptor.MaterialName : "Default";
+			hatJSON.material = AssetLoader.SelectedMaterial().Descriptor.MaterialName ?? "Default";
 			string hatMessage = JsonConvert.SerializeObject(hatJSON);
 
 			if (offlineVRRig)
