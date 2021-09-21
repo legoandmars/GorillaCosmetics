@@ -89,24 +89,28 @@ namespace GorillaCosmetics
             // Disable old mirror and use it as a base
             GameObject gameMirror = null;
             do {
-                gameMirror = GameObject.Find("Level/treeroom/upper level/mirror");
+                gameMirror = GameObject.Find("Level/cosmeticsroom/cosmetics room/shoppingcenter/mirrors2 (1)");
                 await Task.Delay(250);
             } while (gameMirror == null);
 
-            gameMirror.SetActive(false);
+            //gameMirror.SetActive(false);
 
             // Load Mirror
             GameObject Mirror = UnityEngine.Object.Instantiate(PackageUtils.AssetBundleFromPackage($"{folder}\\Misc\\Mirror").LoadAsset<GameObject>("_Hat"));
             Mirror.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
-            Mirror.transform.position = gameMirror.transform.position + new Vector3(0, 0.55f, 0);
-            Mirror.transform.rotation = Quaternion.Euler(0.21f, -153.2f, -4.6f);
+            Mirror.transform.position = gameMirror.transform.position + new Vector3(1.3f, 0.55f, 0.2f);
+            Mirror.transform.rotation = Quaternion.Euler(0, 64, 0);
+            Mirror.transform.parent = gameMirror.transform;
+            // Hide the mirror in favor of the in game one
+            Mirror.transform.Find("mirror").gameObject.SetActive(false);
             UnityEngine.Object.DontDestroyOnLoad(Mirror);
 
             // Load Hat Rack
             GameObject HatRack = UnityEngine.Object.Instantiate(PackageUtils.AssetBundleFromPackage($"{folder}\\Misc\\HatRack").LoadAsset<GameObject>("_Hat"));
             HatRack.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
-            HatRack.transform.position = Mirror.transform.position + new Vector3(-0.45f, -0.42f, -0.7f);
-            HatRack.transform.rotation = Quaternion.Euler(0, -70.0f, 0);
+            HatRack.transform.position = gameMirror.transform.position + new Vector3(2.1f, -0.11f, 0.9f);
+            HatRack.transform.rotation = Quaternion.Euler(0, 149.65f, 0);
+            HatRack.transform.parent = gameMirror.transform;
             UnityEngine.Object.DontDestroyOnLoad(HatRack);
             // how many hats
             int hatCount = GorillaHatObjects.Count;
