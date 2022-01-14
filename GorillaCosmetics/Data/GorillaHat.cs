@@ -1,19 +1,18 @@
-﻿using GorillaCosmetics.Data.Descriptors;
-using GorillaCosmetics.Utils;
+﻿using GorillaCosmetics.Utils;
 using System;
 using UnityEngine;
 
 namespace GorillaCosmetics.Data
 {
-    public class GorillaHat
+    public class GorillaHat : IAsset
     {
         public string FileName { get; }
-        public AssetBundle AssetBundle { get; }
-        public HatDescriptor Descriptor { get; }
+        public CosmeticDescriptor Descriptor { get; }
 
-        public GameObject Hat;
+        AssetBundle assetBundle;
+        GameObject assetTemplate;
 
-        public GorillaHat(string path)
+		public GorillaHat(string path)
         {
             if (path != "Default")
             {
@@ -21,15 +20,16 @@ namespace GorillaCosmetics.Data
                 {
                     FileName = path;
                     var bundleAndJson = PackageUtils.AssetBundleAndJSONFromPackage(FileName);
-                    AssetBundle = bundleAndJson.bundle;
+                    assetBundle = bundleAndJson.bundle;
                     PackageJSON json = bundleAndJson.json;
 
                     // get material object and stuff
-                    Hat = AssetBundle.LoadAsset<GameObject>("_Hat");
-                    foreach (Collider collider in Hat.GetComponentsInChildren<Collider>())
+                    assetTemplate = assetBundle.LoadAsset<GameObject>("_Hat");
+                    foreach (Collider collider in assetTemplate.GetComponentsInChildren<Collider>())
                     {
                         collider.enabled = false; // Disable colliders. They can be left in accidentally and cause some really weird issues.
                     }
+                    assetTemplate.SetActive(false);
 
                     // Make Descriptor
                     Descriptor = PackageUtils.ConvertJsonToHat(json);
@@ -42,10 +42,17 @@ namespace GorillaCosmetics.Data
                 }
             } else
 			{
-                Descriptor = new HatDescriptor();
-                Descriptor.HatName = "Default";
-                Hat = null;
+                Descriptor = new CosmeticDescriptor();
+                Descriptor.Name = "Default";
+                assetTemplate = null;
 			}
         }
+
+        public GameObject GetAsset()
+		{
+            var gameObject = UnityEngine.Object.Instantiate(assetTemplate);
+            gameObject.SetActive(true);
+            return gameObject;
+		}
     }
 }

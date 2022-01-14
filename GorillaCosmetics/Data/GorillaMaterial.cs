@@ -1,19 +1,14 @@
-﻿using GorillaCosmetics.Data.Descriptors;
-using System;
+﻿using System;
 using UnityEngine;
-using System.IO.Compression;
-using System.IO;
-using System.Linq;
-using System.Text;
 using GorillaCosmetics.Utils;
 
 namespace GorillaCosmetics.Data
 {
-    public class GorillaMaterial
+    public class GorillaMaterial : IAsset
     {
         public string FileName { get; }
         public AssetBundle AssetBundle { get; }
-        public GorillaMaterialDescriptor Descriptor { get; }
+        public CosmeticDescriptor Descriptor { get; }
 
         public Material Material;
 
@@ -46,8 +41,8 @@ namespace GorillaCosmetics.Data
             else
             {
                 // try to load the default material
-                Descriptor = new GorillaMaterialDescriptor();
-                Descriptor.MaterialName = "Default";
+                Descriptor = new CosmeticDescriptor();
+                Descriptor.Name = "Default";
                 Descriptor.CustomColors = true;
                 Material = Resources.Load<Material>("objects/treeroom/materials/lightfur");
             }
