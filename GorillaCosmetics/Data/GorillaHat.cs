@@ -32,7 +32,7 @@ namespace GorillaCosmetics.Data
                     assetTemplate.SetActive(false);
 
                     // Make Descriptor
-                    Descriptor = PackageUtils.ConvertJsonToHat(json);
+                    Descriptor = PackageUtils.ConvertJsonToDescriptor(json);
                 }
                 catch (Exception err)
                 {

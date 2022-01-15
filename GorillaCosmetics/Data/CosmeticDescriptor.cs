@@ -2,7 +2,7 @@
 
 namespace GorillaCosmetics.Data
 {
-    public class CosmeticDescriptor : MonoBehaviour
+    public class CosmeticDescriptor
     {
         public string Name = "Cosmetic";
         public string AuthorName = "Author";

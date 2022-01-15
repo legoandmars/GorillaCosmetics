@@ -29,7 +29,7 @@ namespace GorillaCosmetics.Data
                     Material = materialObject.GetComponent<Renderer>().material;
 
                     // Make Descriptor
-                    Descriptor = PackageUtils.ConvertJsonToMaterial(json);
+                    Descriptor = PackageUtils.ConvertJsonToDescriptor(json);
                 }
                 catch (Exception err)
                 {
