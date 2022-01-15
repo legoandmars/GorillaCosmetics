@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GorillaCosmetics
 {
-	public interface IAssetManager
+	public interface IAssetLoader
 	{
 		T GetAsset<T>(string name) where T : IAsset;
 		IEnumerable<T> GetAssets<T>() where T : IAsset;

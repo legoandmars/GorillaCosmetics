@@ -8,14 +8,15 @@ using UnityEngine;
 
 namespace GorillaCosmetics
 {
-	public class AssetManager : IAssetManager
+	public class AssetLoader : IAssetLoader
 	{
         const string MaterialsLocation = "Materials";
         const string HatsLocation = "Hats";
 
-		List<IAsset> assets;
+		//List<IAsset> assets;
+        Dictionary<Type, List<IAsset>> assets;
 
-        public AssetManager()
+        public AssetLoader()
 		{
             assets = GetAllAssets();
 		}
@@ -23,12 +24,16 @@ namespace GorillaCosmetics
 		public T GetAsset<T>(string name) where T : IAsset
 		{
             string formattedName = name.Trim().ToLower();
-			foreach (IAsset asset in assets.Where(x => typeof(T).IsAssignableFrom(x.GetType())))
+
+            if (assets.TryGetValue(typeof(T), out var assetList))
 			{
-                // TODO: Check to make sure this works with networking (it probally doesn't)
-				if (asset.Descriptor.Name.Trim().ToLower() == formattedName)
+                foreach(IAsset asset in assetList)
 				{
-                    return (T)asset;
+					// TODO: Check to make sure this works with networking (it probally doesn't)
+					if (asset.Descriptor.Name.Trim().ToLower() == formattedName)
+					{
+						return (T)asset;
+					}
 				}
 			}
 
@@ -37,24 +42,33 @@ namespace GorillaCosmetics
 
 		public IEnumerable<T> GetAssets<T>() where T : IAsset
 		{
-            return (IEnumerable<T>)assets.Where(x => typeof(T).IsAssignableFrom(x.GetType()));
+            if (assets.TryGetValue(typeof(T), out var assetList))
+			{
+                return (IEnumerable<T>)assetList;
+			} else
+			{
+                return default;
+			}
 		}
 
-        static List<IAsset> GetAllAssets()
+        static Dictionary<Type, List<IAsset>> GetAllAssets()
 		{
+            Dictionary<Type, List<IAsset>> newAssets = new();
             string folder = Path.GetDirectoryName(typeof(GorillaCosmetics).Assembly.Location);
 
             // Load Materials
             IEnumerable<string> filter = new List<string> { "*.material", "*.gmat" };
             var materialFiles = GetFileNames($"{folder}\\{MaterialsLocation}", filter, SearchOption.TopDirectoryOnly, false);
-            var gorillaMaterialObjects = LoadMaterials(materialFiles);
+            var gorillaMaterialObjects = (IEnumerable<IAsset>)LoadMaterials(materialFiles);
+            newAssets.Add(typeof(GorillaMaterial), gorillaMaterialObjects.ToList());
 
             // Load Hats
             IEnumerable<string> hatFilter = new List<string> { "*.hat", "*.ghat" };
             var hatFiles = GetFileNames($"{folder}\\{HatsLocation}", hatFilter, SearchOption.TopDirectoryOnly, false);
-            var gorillaHatObjects = LoadHats(hatFiles);
+            var gorillaHatObjects = (IEnumerable<IAsset>)LoadHats(hatFiles);
+            newAssets.Add(typeof(GorillaHat), gorillaHatObjects.ToList());
 
-            return (gorillaMaterialObjects as IEnumerable<IAsset>).Union(gorillaHatObjects).ToList();
+            return newAssets;
 		}
 
         static IEnumerable<GorillaMaterial> LoadMaterials(IEnumerable<string> materialFiles)
@@ -67,9 +81,11 @@ namespace GorillaCosmetics
 					materials.Add(new GorillaMaterial(materialFile));
                 }
                 catch (Exception ex)
-                {
-                    Debug.LogError("ERROR!");
+				{
+					File.Move(materialFile, $"BROKEN_{materialFile}.broken");
+					Debug.LogError("ERROR!");
                     Debug.LogError(ex);
+                    Debug.LogWarning($"Removed broken cosmetic: {materialFile}");
                 }
             }
             return materials;
@@ -86,8 +102,10 @@ namespace GorillaCosmetics
                 }
                 catch (Exception ex)
                 {
+					File.Move(hatFile, $"BROKEN_{hatFile}.broken");
                     Debug.LogError("ERROR!");
                     Debug.LogError(ex);
+                    Debug.LogWarning($"Removed broken cosmetic: {hatFile}");
                 }
             }
             return hats;
