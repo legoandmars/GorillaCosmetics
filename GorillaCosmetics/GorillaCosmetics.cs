@@ -11,7 +11,8 @@ namespace GorillaCosmetics
     [BepInPlugin("org.legoandmars.gorillatag.gorillacosmetics", "Gorilla Cosmetics", "2.1.1")]
     public class GorillaCosmetics : BaseUnityPlugin
     {
-		public static IAssetManager AssetManager { get; private set; }
+		public static IAssetLoader AssetManager { get; private set; }
+		public static ICosmeticManager CosmeticManager { get; private set; }
 
         public static ConfigEntry<string> selectedMaterial;
         public static ConfigEntry<string> selectedHat;
@@ -24,7 +25,7 @@ namespace GorillaCosmetics
             selectedMaterial = customFile.Bind("Cosmetics", "SelectedMaterial", "Rainbow", "What material to use from the BepInEx/plugins/GorillaCosmetics/Materials folder. Use Default for none");
             selectedHat = customFile.Bind("Cosmetics", "SelectedHat", "Top Hat", "What hat to use from the BepInEx/plugins/GorillaCosmetics/Hats folder. Use Default for none");
 
-			AssetManager = new AssetManager();
+			AssetManager = new AssetLoader();
 
             // Harmony Patches
             GorillaCosmeticsPatches.ApplyHarmonyPatches();
