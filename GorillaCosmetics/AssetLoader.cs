@@ -54,7 +54,7 @@ namespace GorillaCosmetics
         static Dictionary<Type, List<IAsset>> GetAllAssets()
 		{
             Dictionary<Type, List<IAsset>> newAssets = new();
-            string folder = Path.GetDirectoryName(typeof(GorillaCosmetics).Assembly.Location);
+            string folder = Path.GetDirectoryName(typeof(Plugin).Assembly.Location);
 
             // Load Materials
             IEnumerable<string> filter = new List<string> { "*.material", "*.gmat" };

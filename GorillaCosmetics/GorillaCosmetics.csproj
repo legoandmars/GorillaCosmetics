@@ -291,9 +291,8 @@
     <Reference Include="websocket-sharp">
       <HintPath>$(GameAssemblyPath)\websocket-sharp.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="HarmonyPatches\Patches\" />
+    <Reference Include="Utilla">
+      <HintPath>$(PluginsPath)\Utilla\utilla.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

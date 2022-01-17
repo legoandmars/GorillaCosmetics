@@ -13,6 +13,8 @@ namespace GorillaCosmetics.UI
 
 		Action OnEnable { get; set; }
 		Action OnDisable { get; set; }
+		GorillaHat CurrentHat { get; }
+		GorillaMaterial CurrentMaterial { get; }
 
 		void Enable();
 		void Disable();
@@ -21,5 +23,9 @@ namespace GorillaCosmetics.UI
 
 		void NextPage();
 		void PreviousPage();
+		void SetHat(GorillaHat hat);
+		void ResetHat();
+		void SetMaterial(GorillaMaterial material);
+		void ResetMaterial();
 	}
 }

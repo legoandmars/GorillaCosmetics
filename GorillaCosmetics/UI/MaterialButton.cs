@@ -14,12 +14,12 @@ namespace GorillaCosmetics.UI
 			if (Material != null)
 			{
 				base.ButtonActivation();
-				if (cosmeticManager.CurrentMaterial == Material)
+				if (selectionManager.CurrentMaterial == Material)
 				{
-					cosmeticManager.ResetLocalMaterial();
+					selectionManager.ResetMaterial();
 				} else
 				{
-					cosmeticManager.SetLocalMaterial(Material);
+					selectionManager.SetMaterial(Material);
 				}
 			}
 		}

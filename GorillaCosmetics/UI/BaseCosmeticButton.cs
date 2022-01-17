@@ -6,13 +6,13 @@ namespace GorillaCosmetics.UI
 {
 	public class BaseCosmeticButton : GorillaPressableButton
 	{
-		public ICosmeticManager cosmeticManager;
+		public ISelectionManager selectionManager;
 		 
 		WardrobeItemButton wardrobeItemButton;
 
 		public override void Start()
 		{
-			cosmeticManager = GorillaCosmetics.CosmeticManager;
+			selectionManager = Plugin.SelectionManager;
 
 			wardrobeItemButton = GetComponent<WardrobeItemButton>();
 			wardrobeItemButton.enabled = false;

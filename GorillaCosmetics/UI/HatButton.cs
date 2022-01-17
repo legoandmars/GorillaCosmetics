@@ -14,12 +14,12 @@ namespace GorillaCosmetics.UI
 			if (Hat != null)
 			{
 				base.ButtonActivation();
-				if (cosmeticManager.CurrentHat == Hat)
+				if (selectionManager.CurrentHat == Hat)
 				{
-					cosmeticManager.ResetLocalHat();
+					selectionManager.ResetHat();
 				} else
 				{
-					cosmeticManager.SetLocalHat(Hat);
+					selectionManager.SetHat(Hat);
 				}
 			}
 		}
