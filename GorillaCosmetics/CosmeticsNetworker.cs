@@ -10,26 +10,50 @@ namespace GorillaCosmetics
 {
 	public class CosmeticsNetworker : MonoBehaviourPunCallbacks
 	{
+		private const string CustomHatKey = "GorillaCosmetics::CustomHat";
+		private const string CustomMaterialKey = "GorillaCosmetics::Material";
+
 		public override void OnJoinedRoom()
 		{
 			base.OnJoinedRoom();
-			// Add custom player props
+
+			Hashtable customProperties = new Hashtable();
+			if (Plugin.SelectionManager.CurrentHat != null)
+			{
+				customProperties.Add(CustomHatKey, Plugin.SelectionManager.CurrentHat.Descriptor.Name);
+			}
+			if (Plugin.SelectionManager.CurrentMaterial != null)
+			{
+				customProperties.Add(CustomMaterialKey, Plugin.SelectionManager.CurrentMaterial.Descriptor.Name);
+			}
+
+			if (customProperties.Count > 0)
+			{
+				PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
+			}
 		}
 
 		public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
 		{
 			base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
-
-			// TODO: do actual logic using the changed properties, same stuff for material
-			string hatName = "rainbow"; 
-
 			var customCosmeticsController = GorillaGameManager.instance.FindVRRigForPlayer(targetPlayer).GetComponent<ICustomCosmeticsController>();
-			var hat = Plugin.AssetLoader.GetAsset<GorillaHat>(hatName);
 
-			// If we have the hat locally
-			if (hat != default)
+			if (changedProps.TryGetValue(CustomHatKey, out var hatObj))
 			{
-				customCosmeticsController.SetHat(hat);
+				var hat = Plugin.AssetLoader.GetAsset<GorillaHat>(hatObj as string);
+				if (hat != default)
+				{
+					customCosmeticsController.SetHat(hat);
+				}
+			}
+
+			if (changedProps.TryGetValue(CustomMaterialKey, out var matObj))
+			{
+				var mat = Plugin.AssetLoader.GetAsset<GorillaMaterial>(matObj as string);
+				if (mat != default)
+				{
+					customCosmeticsController.SetMaterial(mat);
+				}
 			}
 		}
 	}
