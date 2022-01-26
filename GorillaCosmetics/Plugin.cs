@@ -10,6 +10,7 @@ using UnityEngine;
 
 namespace GorillaCosmetics
 {
+    // TODO: Update readme build instructions
     [BepInPlugin("org.legoandmars.gorillatag.gorillacosmetics", "Gorilla Cosmetics", "2.1.1")]
     // TODO: Add utilla as a dependency in mmm
     [BepInDependency("org.legoandmars.gorillatag.utilla", "1.5.0")]
@@ -18,22 +19,10 @@ namespace GorillaCosmetics
 		public static IAssetLoader AssetLoader { get; private set; }
         public static ISelectionManager SelectionManager { get; private set; }
 
-        // TODO: Remove?
-        public static ConfigEntry<string> selectedMaterial;
-        public static ConfigEntry<string> selectedHat;
-
         void Start()
         {
-            Debug.Log("Starting Gorilla Cosmetics");
-
-            // Config
-            var customFile = new ConfigFile(Path.Combine(Paths.ConfigPath, "GorillaCosmetics.cfg"), true);
-            selectedMaterial = customFile.Bind("Cosmetics", "SelectedMaterial", "Rainbow", "What material to use from the BepInEx/plugins/GorillaCosmetics/Materials folder. Use Default for none");
-            selectedHat = customFile.Bind("Cosmetics", "SelectedHat", "Top Hat", "What hat to use from the BepInEx/plugins/GorillaCosmetics/Hats folder. Use Default for none");
-
             Utilla.Events.GameInitialized += OnGameInitialized;
 
-            // Harmony Patches
             GorillaCosmeticsPatches.ApplyHarmonyPatches();
 		}
 
@@ -43,5 +32,41 @@ namespace GorillaCosmetics
             SelectionManager = new SelectionManager();
             gameObject.AddComponent<CosmeticsNetworker>();
 		}
-	}
+
+# if DEBUG
+        void OnGUI()
+		{
+            int y = 0;
+            int GetY()
+			{
+                return y += 20;
+			}
+
+            if (GUI.Button(new Rect(20, GetY(), 100, 20), "Next Page"))
+			{
+                SelectionManager.NextPage();
+			}
+            if (GUI.Button(new Rect(20, GetY(), 100, 20), "Previous Page"))
+			{
+                SelectionManager.PreviousPage();
+			}
+            if (GUI.Button(new Rect(20, GetY(), 100, 20), "Hats"))
+			{
+                SelectionManager.SetView(ISelectionManager.SelectionView.Hat);
+			}
+            if (GUI.Button(new Rect(20, GetY(), 100, 20), "Materials"))
+			{
+                SelectionManager.SetView(ISelectionManager.SelectionView.Material);
+			}
+            if (GUI.Button(new Rect(20, GetY(), 100, 20), "Enable"))
+			{
+                SelectionManager.Enable();
+			}
+            if (GUI.Button(new Rect(20, GetY(), 100, 20), "Disable"))
+			{
+                SelectionManager.Disable();
+			}
+		}
+#endif
+    }
 }

@@ -13,23 +13,35 @@ namespace GorillaCosmetics
 		private const string CustomHatKey = "GorillaCosmetics::CustomHat";
 		private const string CustomMaterialKey = "GorillaCosmetics::Material";
 
+		void Start()
+		{
+			Plugin.SelectionManager.OnCosmeticsUpdated += UpdatePlayerCosmetics;
+		}
+
 		public override void OnJoinedRoom()
 		{
 			base.OnJoinedRoom();
+			UpdatePlayerCosmetics();
+		}
 
-			Hashtable customProperties = new Hashtable();
-			if (Plugin.SelectionManager.CurrentHat != null)
+		public void UpdatePlayerCosmetics()
+		{
+			if (PhotonNetwork.InRoom)
 			{
-				customProperties.Add(CustomHatKey, Plugin.SelectionManager.CurrentHat.Descriptor.Name);
-			}
-			if (Plugin.SelectionManager.CurrentMaterial != null)
-			{
-				customProperties.Add(CustomMaterialKey, Plugin.SelectionManager.CurrentMaterial.Descriptor.Name);
-			}
+				Hashtable customProperties = new Hashtable();
+				if (Plugin.SelectionManager.CurrentHat != null)
+				{
+					customProperties.Add(CustomHatKey, Plugin.SelectionManager.CurrentHat.Descriptor.Name);
+				}
+				if (Plugin.SelectionManager.CurrentMaterial != null)
+				{
+					customProperties.Add(CustomMaterialKey, Plugin.SelectionManager.CurrentMaterial.Descriptor.Name);
+				}
 
-			if (customProperties.Count > 0)
-			{
-				PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
+				if (customProperties.Count > 0)
+				{
+					PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
+				}
 			}
 		}
 
