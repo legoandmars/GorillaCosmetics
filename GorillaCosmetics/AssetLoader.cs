@@ -40,11 +40,16 @@ namespace GorillaCosmetics
             return default;
 		}
 
-		public IEnumerable<T> GetAssets<T>() where T : IAsset
+		public List<T> GetAssets<T>() where T : IAsset
 		{
             if (assets.TryGetValue(typeof(T), out var assetList))
 			{
-                return (IEnumerable<T>)assetList;
+                List<T> list = new();
+                foreach(var asset in assetList)
+				{
+                    list.Add((T)asset);
+				}
+                return list;
 			} else
 			{
                 return default;
@@ -82,9 +87,7 @@ namespace GorillaCosmetics
                 }
                 catch (Exception ex)
 				{
-					File.Move(materialFile, $"BROKEN_{materialFile}.broken");
-					Debug.LogError("ERROR!");
-                    Debug.LogError(ex);
+					File.Move(materialFile, $"{materialFile}.broken");
                     Debug.LogWarning($"Removed broken cosmetic: {materialFile}");
                 }
             }
@@ -102,9 +105,7 @@ namespace GorillaCosmetics
                 }
                 catch (Exception ex)
                 {
-					File.Move(hatFile, $"BROKEN_{hatFile}.broken");
-                    Debug.LogError("ERROR!");
-                    Debug.LogError(ex);
+					File.Move(hatFile, $"{hatFile}.broken");
                     Debug.LogWarning($"Removed broken cosmetic: {hatFile}");
                 }
             }
