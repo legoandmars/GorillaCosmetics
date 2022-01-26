@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 namespace GorillaCosmetics.UI
 {
@@ -9,18 +10,35 @@ namespace GorillaCosmetics.UI
 	{
 		public GorillaMaterial Material { get; set; }
 
+		GameObject previewOrb;
+
 		public override void ButtonActivation()
 		{
 			if (Material != null)
 			{
 				base.ButtonActivation();
-				if (selectionManager.CurrentMaterial == Material)
+				if (Plugin.SelectionManager.CurrentMaterial == Material)
 				{
-					selectionManager.ResetMaterial();
+					Plugin.SelectionManager.ResetMaterial();
 				} else
 				{
-					selectionManager.SetMaterial(Material);
+					Plugin.SelectionManager.SetMaterial(Material);
 				}
+			}
+		}
+
+		public void SetMaterial(GorillaMaterial material)
+		{
+			Material = material;
+			if (previewOrb != null)
+			{
+				Destroy(previewOrb);
+				previewOrb = null;
+			}
+			if (Material != null)
+			{
+				GameObject head = wardrobeItemButton.controlledModel.gameObject;
+				previewOrb = Material.GetPreviewOrb(head.transform);
 			}
 		}
 	}

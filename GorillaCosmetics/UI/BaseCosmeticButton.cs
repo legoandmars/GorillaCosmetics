@@ -6,14 +6,11 @@ namespace GorillaCosmetics.UI
 {
 	public class BaseCosmeticButton : GorillaPressableButton
 	{
-		public ISelectionManager selectionManager;
-		 
-		WardrobeItemButton wardrobeItemButton;
+		protected WardrobeItemButton wardrobeItemButton;
 
-		public override void Start()
+		public void Awake()
 		{
-			selectionManager = Plugin.SelectionManager;
-
+			UnityEngine.Debug.Log("Running start");
 			wardrobeItemButton = GetComponent<WardrobeItemButton>();
 			wardrobeItemButton.enabled = false;
 
@@ -25,7 +22,7 @@ namespace GorillaCosmetics.UI
 			onText = wardrobeItemButton.onText;
 			myText = wardrobeItemButton.myText;
 
-			base.Start();
+			//base.Start();
 		}
 
 		void OnDestroy()

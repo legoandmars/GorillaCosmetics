@@ -2,6 +2,7 @@
 using GorillaNetworking;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -10,91 +11,268 @@ namespace GorillaCosmetics.UI
 	public class SelectionManager : ISelectionManager
 	{
 		const string PlayerPrefsPrefix = "MOD_";
+		const int PageSize = 3;
+		private const string HatPlayerPrefKey = "hatCosmetic";
+		private const string MaterialPlayerPrefKey = "materialCosmetic";
 
-		public Action OnEnable { get; set; }
-		public Action OnDisable { get; set; }
+		public Action OnCosmeticsUpdated { get; set; }
 
 		public GorillaHat CurrentHat { get; private set; }
 		public GorillaMaterial CurrentMaterial { get; private set; }
 
+		ISelectionManager.SelectionView view;
+
 		ICustomCosmeticsController offlineCustomCosmeticsController;
 		ICustomCosmeticsController onlineCustomCosmeticsController => GorillaTagger.Instance.myVRRig.GetComponent<ICustomCosmeticsController>(); // TODO: ew
+
+		CosmeticsController.Wardrobe wardrobe;
+
+		List<GorillaHat> hats;
+		List<GorillaMaterial> materials;
+
+		List<HatButton> hatButtons;
+		List<MaterialButton> materialButtons;
+
+		GameObject previewHat;
+		GameObject previewOrb;
+
+		int page;
+		int PageCount => Mathf.CeilToInt((view == ISelectionManager.SelectionView.Hat ? hats.Count : materials.Count) / (float)PageSize);
 
 		public SelectionManager()
 		{
 			offlineCustomCosmeticsController = GorillaTagger.Instance.offlineVRRig.GetComponent<ICustomCosmeticsController>();
+			hats = Plugin.AssetLoader.GetAssets<GorillaHat>();
+			materials = Plugin.AssetLoader.GetAssets<GorillaMaterial>();
 
-			var hatString = PlayerPrefs.GetString("hatCosmetic", "NOTHING");
-			var matString = PlayerPrefs.GetString("materialCosmetic", "NOTHING");
+			var hatString = PlayerPrefs.GetString(HatPlayerPrefKey, "NOTHING");
+			var matString = PlayerPrefs.GetString(MaterialPlayerPrefKey, "NOTHING");
 
 			if (hatString.StartsWith(PlayerPrefsPrefix))
 			{
-				// TODO: Apply hat
+				var hat = Plugin.AssetLoader.GetAsset<GorillaHat>(hatString);
+				if (hat != null)
+				{
+					SetHat(hat);
+				}
 			}
-			
-			// TODO: Apply mat
+
+			if (matString.StartsWith(PlayerPrefsPrefix))
+			{
+				var mat = Plugin.AssetLoader.GetAsset<GorillaMaterial>(matString);
+				if (mat != null)
+				{
+					SetMaterial(mat);
+				}
+			}
+
+			wardrobe = CosmeticsController.instance.wardrobes[1];
+
+			// TODO: Create Toggle Button
+			Enable();
 		}
 
 		public void Disable()
 		{
-			OnDisable?.Invoke();
-			throw new NotImplementedException();
+			// TODO: Show normal cosmetics
+			// TODO: Destroy page view buttons and navigation buttons
+			foreach (var button in wardrobe.wardrobeItemButtons)
+			{
+				var oldButton = button.GetComponent<BaseCosmeticButton>();
+				if (oldButton != null)
+				{
+					UnityEngine.Object.DestroyImmediate(oldButton);
+				}
+			}
 		}
 
 		public void Enable()
 		{
-			OnEnable?.Invoke();
-			throw new NotImplementedException();
+			// TODO: Create page view buttons and navigation buttons
+			SetView(ISelectionManager.SelectionView.Hat);
 		}
 
 		public void NextPage()
 		{
-			throw new NotImplementedException();
+			if (page < PageCount - 1)
+			{
+				page++;
+			}
+
+			UpdateView();
 		}
 
 		public void PreviousPage()
 		{
-			throw new NotImplementedException();
+			if (page > 0)
+			{
+				page--;
+			}
+
+			UpdateView();
 		}
 
 		public void SetView(ISelectionManager.SelectionView view)
 		{
-			throw new NotImplementedException();
+			this.view = view;
+			page = 0;
+
+			hatButtons = new();
+			materialButtons = new();
+
+			foreach (var button in wardrobe.wardrobeItemButtons)
+			{
+				var oldButton = button.GetComponent<BaseCosmeticButton>();
+				if (oldButton != null)
+				{
+					UnityEngine.Object.DestroyImmediate(oldButton);
+				}
+
+				switch (view)
+				{
+					case ISelectionManager.SelectionView.Hat:
+						var hatButton = button.gameObject.AddComponent<HatButton>();
+						hatButtons.Add(hatButton);
+						break;
+					case ISelectionManager.SelectionView.Material:
+						var matButton = button.gameObject.AddComponent<MaterialButton>();
+						materialButtons.Add(matButton);
+						break;
+				}
+			}
+
+			UpdateView();
+		}
+
+		void UpdateView()
+		{
+			switch (view)
+			{
+				case ISelectionManager.SelectionView.Hat:
+					UpdateHatView();
+					break;
+				case ISelectionManager.SelectionView.Material:
+					UpdateMaterialView();
+					break;
+			}
+			UpdateHeadModel();
+		}
+
+		void UpdateHatView()
+		{
+			var currentPageHats = hats.Skip(page * PageSize).Take(PageSize).ToList();
+			for(int i = 0; i < hatButtons.Count; i++)
+			{
+				hatButtons[i].SetHat(i < currentPageHats.Count ? currentPageHats[i] : null);
+			}
+		}
+
+		void UpdateMaterialView()
+		{
+			var currentPageMats = materials.Skip(page * PageSize).Take(PageSize).ToList();
+			for(int i = 0; i < materialButtons.Count; i++)
+			{
+				materialButtons[i].SetMaterial(i < currentPageMats.Count ? currentPageMats[i] : null);
+			}
+		}
+
+		void UpdateHeadModel()
+		{
+			Transform parent = wardrobe.selfDoll.gameObject.transform;
+
+			if (previewHat != null)
+			{
+				UnityEngine.Object.Destroy(previewHat);
+			}
+
+			if (CurrentHat != null)
+			{
+				previewHat = CurrentHat.GetAsset();
+				previewHat.transform.parent = parent;
+				previewHat.transform.localPosition = Vector3.zero;
+				previewHat.transform.localRotation = Quaternion.identity;
+				previewHat.transform.localScale = Vector3.one;
+			}
+
+			if (previewOrb != null)
+			{
+				UnityEngine.Object.Destroy(previewOrb);
+			}
+
+			if (CurrentMaterial != null)
+			{
+				previewOrb = CurrentMaterial.GetPreviewOrb(parent);
+				previewOrb.transform.localPosition += Vector3.right;
+			}
 		}
 
 		public void SetHat(GorillaHat hat)
 		{
 			ResetGameHat();
-			PlayerPrefs.SetString("hatCosmetic", PlayerPrefsPrefix + hat.Descriptor.Name);
-			PlayerPrefs.Save();
+			if (hat == null)
+			{
+				ResetHat();
+			} else
+			{
+				PlayerPrefs.SetString(HatPlayerPrefKey, PlayerPrefsPrefix + hat.Descriptor.Name);
+				PlayerPrefs.Save();
 
-			CurrentHat = hat;
-			offlineCustomCosmeticsController.SetHat(hat);
-			onlineCustomCosmeticsController.SetHat(hat);
+				CurrentHat = hat;
+				offlineCustomCosmeticsController.SetHat(hat);
+				onlineCustomCosmeticsController?.SetHat(hat);
 
-			UpdateWardrobeDisplay();
+				UpdateHeadModel();
+
+				OnCosmeticsUpdated?.Invoke();
+			}
 		}
 
 		public void ResetHat()
 		{
-			PlayerPrefs.SetString("hatCosmetic", CosmeticsController.instance.nullItem.itemName);
+			PlayerPrefs.SetString(HatPlayerPrefKey, CosmeticsController.instance.nullItem.itemName);
 			PlayerPrefs.Save();
 
 			CurrentHat = null;
 			offlineCustomCosmeticsController.ResetHat();
-			onlineCustomCosmeticsController.ResetHat();
+			onlineCustomCosmeticsController?.ResetHat();
 
-			UpdateWardrobeDisplay();
+			UpdateHeadModel();
+
+			OnCosmeticsUpdated?.Invoke();
 		}
 
 		public void SetMaterial(GorillaMaterial material)
 		{
-			throw new NotImplementedException();
+			if (material == null)
+			{
+				ResetMaterial();
+			} else
+			{
+				PlayerPrefs.SetString(MaterialPlayerPrefKey, PlayerPrefsPrefix + material.Descriptor.Name);
+				PlayerPrefs.Save();
+
+				CurrentMaterial = material;
+				offlineCustomCosmeticsController.SetMaterial(material);
+				onlineCustomCosmeticsController?.SetMaterial(material);
+
+				UpdateHeadModel();
+
+				OnCosmeticsUpdated?.Invoke();
+			}
 		}
 
 		public void ResetMaterial()
 		{
-			throw new NotImplementedException();
+			PlayerPrefs.SetString(MaterialPlayerPrefKey, CosmeticsController.instance.nullItem.itemName);
+			PlayerPrefs.Save();
+
+			CurrentMaterial = null;
+			offlineCustomCosmeticsController.ResetMaterial();
+			onlineCustomCosmeticsController?.ResetMaterial();
+
+			UpdateHeadModel();
+
+			OnCosmeticsUpdated?.Invoke();
 		}
 
 		void ResetGameHat()
@@ -105,11 +283,6 @@ namespace GorillaCosmetics.UI
 				CosmeticsController.instance.tryOnSet.hat = CosmeticsController.instance.nullItem;
 				CosmeticsController.instance.UpdateShoppingCart();
 			}
-		}
-
-		void UpdateWardrobeDisplay()
-		{
-			throw new NotImplementedException();
 		}
 	}
 }

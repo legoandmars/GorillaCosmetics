@@ -11,8 +11,7 @@ namespace GorillaCosmetics.UI
 			Material
 		}
 
-		Action OnEnable { get; set; }
-		Action OnDisable { get; set; }
+		Action OnCosmeticsUpdated { get; set; }
 		GorillaHat CurrentHat { get; }
 		GorillaMaterial CurrentMaterial { get; }
 
