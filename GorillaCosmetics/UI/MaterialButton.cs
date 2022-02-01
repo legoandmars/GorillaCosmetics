@@ -27,6 +27,16 @@ namespace GorillaCosmetics.UI
 			}
 		}
 
+		public new void OnDestroy()
+		{
+			base.OnDestroy();
+			
+			if (previewOrb != null)
+			{
+				Destroy(previewOrb);
+			}
+		}
+
 		public void SetMaterial(GorillaMaterial material)
 		{
 			Material = material;

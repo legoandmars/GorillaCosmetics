@@ -27,12 +27,23 @@ namespace GorillaCosmetics.UI
 			}
 		}
 
+		public new void OnDestroy()
+		{
+			base.OnDestroy();
+			
+			if (previewHat != null)
+			{
+				Destroy(previewHat);
+			}
+		}
+
 		public void SetHat(GorillaHat hat)
 		{
 			Hat = hat;
 			if (previewHat != null)
 			{
 				Destroy(previewHat);
+				previewHat = null;
 			}
 			if (Hat != null)
 			{

@@ -89,7 +89,8 @@ namespace GorillaCosmetics.UI
 		public void Enable()
 		{
 			// TODO: Create page view buttons and navigation buttons
-			SetView(ISelectionManager.SelectionView.Hat);
+			//SetView(ISelectionManager.SelectionView.Hat);
+			SetView(ISelectionManager.SelectionView.Material);
 		}
 
 		public void NextPage()

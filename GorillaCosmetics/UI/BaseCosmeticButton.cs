@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using UnityEngine;
 
 namespace GorillaCosmetics.UI
 {
@@ -10,9 +10,13 @@ namespace GorillaCosmetics.UI
 
 		public void Awake()
 		{
-			UnityEngine.Debug.Log("Running start");
 			wardrobeItemButton = GetComponent<WardrobeItemButton>();
 			wardrobeItemButton.enabled = false;
+
+			foreach (Transform child in wardrobeItemButton.controlledModel.transform)
+			{
+				child.gameObject.SetActive(false);
+			}
 
 			pressedMaterial = wardrobeItemButton.pressedMaterial ;
 			unpressedMaterial = wardrobeItemButton.unpressedMaterial;
@@ -25,9 +29,13 @@ namespace GorillaCosmetics.UI
 			//base.Start();
 		}
 
-		void OnDestroy()
+		public void OnDestroy()
 		{
 			wardrobeItemButton.enabled = true;
+			foreach (Transform child in wardrobeItemButton.controlledModel.transform)
+			{
+				child.gameObject.SetActive(true);
+			}
 		}
 
 		public override void ButtonActivation()
