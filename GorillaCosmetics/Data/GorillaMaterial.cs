@@ -53,9 +53,9 @@ namespace GorillaCosmetics.Data
             GameObject gameObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             gameObject.layer = 18;
             gameObject.transform.SetParent(parent);
-            gameObject.transform.localScale = Vector3.one * 0.5f;
-            gameObject.transform.localPosition = new Vector3(0, 0, 0.2f);
-            gameObject.transform.rotation = Quaternion.identity;
+            gameObject.transform.localPosition = Constants.PreviewOrbLocalPosition;
+            gameObject.transform.rotation = Constants.PreviewOrbRotation;
+            gameObject.transform.localScale = Constants.PreviewOrbLocalScale;
 			gameObject.GetComponent<Renderer>().material = Material;
             return gameObject;
 		}

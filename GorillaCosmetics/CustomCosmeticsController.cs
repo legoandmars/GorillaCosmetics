@@ -56,12 +56,14 @@ namespace GorillaCosmetics
 
 		public void SetMaterial(GorillaMaterial material)
 		{
-			throw new NotImplementedException();
+			Debug.Log($"Player: {rig.playerName} switching material from {CurrentMaterial?.Descriptor?.Name} to {material?.Descriptor?.Name}");
+			//throw new NotImplementedException();
 		}
 
 		public void ResetMaterial()
 		{
-			throw new NotImplementedException();
+			Debug.Log($"Player: {rig.playerName} resetting material");
+			//throw new NotImplementedException();
 		}
 	}
 }

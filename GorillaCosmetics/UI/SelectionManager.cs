@@ -23,15 +23,16 @@ namespace GorillaCosmetics.UI
 		ISelectionManager.SelectionView view;
 
 		ICustomCosmeticsController offlineCustomCosmeticsController;
-		ICustomCosmeticsController onlineCustomCosmeticsController => GorillaTagger.Instance.myVRRig.GetComponent<ICustomCosmeticsController>(); // TODO: ew
+		ICustomCosmeticsController onlineCustomCosmeticsController => GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: ew
 
 		CosmeticsController.Wardrobe wardrobe;
 
 		List<GorillaHat> hats;
 		List<GorillaMaterial> materials;
 
-		List<HatButton> hatButtons;
-		List<MaterialButton> materialButtons;
+		// TODO: Private
+		internal List<HatButton> hatButtons;
+		internal List<MaterialButton> materialButtons;
 
 		GameObject previewHat;
 		GameObject previewOrb;
@@ -45,12 +46,14 @@ namespace GorillaCosmetics.UI
 			hats = Plugin.AssetLoader.GetAssets<GorillaHat>();
 			materials = Plugin.AssetLoader.GetAssets<GorillaMaterial>();
 
+			wardrobe = CosmeticsController.instance.wardrobes[1];
+
 			var hatString = PlayerPrefs.GetString(HatPlayerPrefKey, "NOTHING");
 			var matString = PlayerPrefs.GetString(MaterialPlayerPrefKey, "NOTHING");
 
 			if (hatString.StartsWith(PlayerPrefsPrefix))
 			{
-				var hat = Plugin.AssetLoader.GetAsset<GorillaHat>(hatString);
+				var hat = Plugin.AssetLoader.GetAsset<GorillaHat>(hatString.Substring(PlayerPrefsPrefix.Length));
 				if (hat != null)
 				{
 					SetHat(hat);
@@ -59,14 +62,12 @@ namespace GorillaCosmetics.UI
 
 			if (matString.StartsWith(PlayerPrefsPrefix))
 			{
-				var mat = Plugin.AssetLoader.GetAsset<GorillaMaterial>(matString);
+				var mat = Plugin.AssetLoader.GetAsset<GorillaMaterial>(matString.Substring(PlayerPrefsPrefix.Length));
 				if (mat != null)
 				{
 					SetMaterial(mat);
 				}
 			}
-
-			wardrobe = CosmeticsController.instance.wardrobes[1];
 
 			// TODO: Create Toggle Button
 			Enable();
@@ -190,9 +191,9 @@ namespace GorillaCosmetics.UI
 			{
 				previewHat = CurrentHat.GetAsset();
 				previewHat.transform.parent = parent;
-				previewHat.transform.localPosition = Vector3.zero;
-				previewHat.transform.localRotation = Quaternion.identity;
-				previewHat.transform.localScale = Vector3.one;
+				previewHat.transform.localPosition = Constants.PreviewHatLocalPosition;
+				previewHat.transform.localRotation = Constants.PreviewHatLocalRotation;
+				previewHat.transform.localScale = Constants.PreviewHatLocalScale;
 			}
 
 			if (previewOrb != null)
@@ -203,7 +204,7 @@ namespace GorillaCosmetics.UI
 			if (CurrentMaterial != null)
 			{
 				previewOrb = CurrentMaterial.GetPreviewOrb(parent);
-				previewOrb.transform.localPosition += Vector3.right;
+				previewOrb.transform.localPosition += Constants.PreviewOrbHeadModelLocalPositionOffset;
 			}
 		}
 

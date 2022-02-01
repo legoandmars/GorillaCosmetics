@@ -14,9 +14,9 @@ namespace GorillaCosmetics.UI
 
 		public override void ButtonActivation()
 		{
+			base.ButtonActivation();
 			if (Material != null)
 			{
-				base.ButtonActivation();
 				if (Plugin.SelectionManager.CurrentMaterial == Material)
 				{
 					Plugin.SelectionManager.ResetMaterial();
@@ -24,6 +24,9 @@ namespace GorillaCosmetics.UI
 				{
 					Plugin.SelectionManager.SetMaterial(Material);
 				}
+			} else
+			{
+				Plugin.SelectionManager.ResetMaterial();
 			}
 		}
 

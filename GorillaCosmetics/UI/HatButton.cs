@@ -14,9 +14,9 @@ namespace GorillaCosmetics.UI
 
 		public override void ButtonActivation()
 		{
+			base.ButtonActivation();
 			if (Hat != null)
 			{
-				base.ButtonActivation();
 				if (Plugin.SelectionManager.CurrentHat == Hat)
 				{
 					Plugin.SelectionManager.ResetHat();
@@ -24,6 +24,9 @@ namespace GorillaCosmetics.UI
 				{
 					Plugin.SelectionManager.SetHat(Hat);
 				}
+			} else
+			{
+				Plugin.SelectionManager.ResetHat();
 			}
 		}
 
@@ -51,9 +54,9 @@ namespace GorillaCosmetics.UI
 				HeadModel controlledModel = wardrobeItemButton.controlledModel;
 				previewHat.transform.parent = controlledModel.gameObject.transform;
 				// TODO: Get the actual proper numbers
-				previewHat.transform.localPosition = new Vector3(0, -0.04f, 0.54f);
-				previewHat.transform.localRotation = Quaternion.Euler(0, 90, 100);
-				previewHat.transform.localScale = Vector3.one * 0.25f;
+				previewHat.transform.localPosition = Constants.PreviewHatLocalPosition;
+				previewHat.transform.localRotation = Constants.PreviewHatLocalRotation;
+				previewHat.transform.localScale = Constants.PreviewHatLocalScale;
 			}
 		}
 	}

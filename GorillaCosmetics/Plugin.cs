@@ -36,7 +36,7 @@ namespace GorillaCosmetics
 # if DEBUG
         void OnGUI()
 		{
-            int y = 0;
+            int y = 50;
             int GetY()
 			{
                 return y += 20;
@@ -50,6 +50,7 @@ namespace GorillaCosmetics
 			{
                 SelectionManager.PreviousPage();
 			}
+
             if (GUI.Button(new Rect(20, GetY(), 100, 20), "Hats"))
 			{
                 SelectionManager.SetView(ISelectionManager.SelectionView.Hat);
@@ -58,6 +59,7 @@ namespace GorillaCosmetics
 			{
                 SelectionManager.SetView(ISelectionManager.SelectionView.Material);
 			}
+
             if (GUI.Button(new Rect(20, GetY(), 100, 20), "Enable"))
 			{
                 SelectionManager.Enable();
@@ -65,6 +67,31 @@ namespace GorillaCosmetics
             if (GUI.Button(new Rect(20, GetY(), 100, 20), "Disable"))
 			{
                 SelectionManager.Disable();
+			}
+
+            if (GUI.Button(new Rect(20, GetY(), 100, 20), "Button 1"))
+			{
+                PressButton(0);
+			}
+            if (GUI.Button(new Rect(20, GetY(), 100, 20), "Button 2"))
+			{
+                PressButton(1);
+			}
+            if (GUI.Button(new Rect(20, GetY(), 100, 20), "Button 3"))
+			{
+                PressButton(2);
+			}
+
+            void PressButton(int x)
+			{
+                SelectionManager sm = SelectionManager as SelectionManager;
+                if (sm?.hatButtons?.Count > 0)
+				{
+					sm.hatButtons[x].ButtonActivation();
+				} else
+				{
+					sm.materialButtons[x].ButtonActivation();
+				}
 			}
 		}
 #endif
