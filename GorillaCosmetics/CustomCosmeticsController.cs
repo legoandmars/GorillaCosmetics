@@ -14,6 +14,7 @@ namespace GorillaCosmetics
 		public GorillaMaterial CurrentMaterial { get; private set; }
 
 		GameObject currentHatObject;
+		Material defaultMaterial;
 
 		VRRig rig;
 
@@ -57,13 +58,39 @@ namespace GorillaCosmetics
 		public void SetMaterial(GorillaMaterial material)
 		{
 			Debug.Log($"Player: {rig.playerName} switching material from {CurrentMaterial?.Descriptor?.Name} to {material?.Descriptor?.Name}");
-			//throw new NotImplementedException();
+
+			if (CurrentMaterial == null)
+			{
+				defaultMaterial = rig.mainSkin.material;
+			}
+
+			CurrentMaterial = material;
+			if (material.Descriptor.CustomColors)
+			{
+				// TODO: Custom color support
+			}
+			SetVRRigMaterial(material.Material);
 		}
 
 		public void ResetMaterial()
 		{
 			Debug.Log($"Player: {rig.playerName} resetting material");
-			//throw new NotImplementedException();
+
+			if (defaultMaterial != null)
+			{
+				SetVRRigMaterial(defaultMaterial);
+			}
+
+			CurrentMaterial = null;
+		}
+
+		void SetVRRigMaterial(Material material)
+		{
+			rig.materialsToChangeTo[0] = material;
+			if (rig.currentMatIndex == 0)
+			{
+				rig.ChangeMaterialLocal(0);
+			}
 		}
 	}
 }
