@@ -25,8 +25,6 @@ namespace GorillaCosmetics.UI
 			offText = wardrobeItemButton.offText;
 			onText = wardrobeItemButton.onText;
 			myText = wardrobeItemButton.myText;
-
-			//base.Start();
 		}
 
 		public void OnDestroy()

@@ -34,6 +34,8 @@ namespace GorillaCosmetics.UI
 		internal List<HatButton> hatButtons = new();
 		internal List<MaterialButton> materialButtons = new();
 		List<PageButton> pageButtons = new();
+		List<ViewButton> viewButtons = new();
+		WardrobeFunctionButton badgeButton;
 
 		GameObject previewHat;
 		GameObject previewOrb;
@@ -84,11 +86,19 @@ namespace GorillaCosmetics.UI
 				}
 			}
 
-			foreach(PageButton pageButton in pageButtons)
+			foreach (PageButton pageButton in pageButtons)
 			{
 				GameObject.Destroy(pageButton);
 			}
 			pageButtons = new();
+
+			foreach (ViewButton viewButton in viewButtons)
+			{
+				GameObject.Destroy(viewButton);
+			}
+			viewButtons = new();
+			badgeButton.enabled = true;
+			badgeButton.myText.enabled = true;
 
 			// TODO: Fix
 			CosmeticsController.instance.PressWardrobeFunctionButton("hat");
@@ -106,16 +116,32 @@ namespace GorillaCosmetics.UI
 				// but it is likely to break with any update that moves the wardrobe around.
 				foreach (Transform transform in wardrobe.wardrobeItemButtons[0].transform.parent)
 				{
-					if (transform.name.Contains("Left") || transform.name.Contains("left"))
+					string lowerName = transform.name.ToLower();
+					if (lowerName.Contains("left"))
 					{
 						var pageButton = transform.gameObject.AddComponent<PageButton>();
 						pageButton.Forward = false;
 						pageButtons.Add(pageButton);
-					} else if (transform.name.Contains("Right") || transform.name.Contains("right"))
+					} else if (lowerName.Contains("right"))
 					{
 						var pageButton = transform.gameObject.AddComponent<PageButton>();
 						pageButton.Forward = true;
 						pageButtons.Add(pageButton);
+					} else if (lowerName.Contains("hat"))
+					{
+						var viewButton = transform.gameObject.AddComponent<ViewButton>();
+						viewButton.SetView(ISelectionManager.SelectionView.Hat);
+						viewButtons.Add(viewButton);
+					} else if (lowerName.Contains("face"))
+					{
+						var viewButton = transform.gameObject.AddComponent<ViewButton>();
+						viewButton.SetView(ISelectionManager.SelectionView.Material);
+						viewButtons.Add(viewButton);
+					} else if (lowerName.Contains("badge"))
+					{
+						badgeButton = transform.GetComponent<WardrobeFunctionButton>();
+						badgeButton.enabled = false;
+						badgeButton.myText.enabled = false;
 					}
 				}
 			} catch (Exception e)
