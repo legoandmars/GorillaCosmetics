@@ -63,20 +63,48 @@ namespace GorillaCosmetics.UI
 				}
 			}
 
-			if (matString.StartsWith(PlayerPrefsPrefix))
+			CreateEnableButton();
+		}
+
+		void CreateEnableButton()
+		{
+			GameObject template = null;
+
+			foreach (Transform transform in wardrobe.wardrobeItemButtons[0].transform.parent)
 			{
-				var mat = Plugin.AssetLoader.GetAsset<GorillaMaterial>(matString.Substring(PlayerPrefsPrefix.Length));
-				if (mat != null)
+				if (transform.name.ToLower().Contains("hat"))
 				{
-					SetMaterial(mat);
+					template = transform.gameObject;
+					break;
 				}
 			}
+			if (template == null)
+			{
+				Debug.LogError("GorillaCosmetics: Could not find enable button template");
+				return;
+			}
+
+			GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			cube.SetActive(false);
+			MeshFilter meshFilter = cube.GetComponent<MeshFilter>();
+
+			GameObject button = GameObject.Instantiate(template);
+			button.name = "ToggleEnableButton";
+			button.GetComponent<MeshFilter>().mesh = meshFilter.mesh;
+			button.GetComponent<Renderer>().material = Resources.Load<Material>("objects/treeroom/materials/plastic");
+			button.transform.parent = template.transform.parent;
+			button.transform.localPosition = template.transform.localPosition + Constants.EnableButtonLocalPositionOffset;
+			button.transform.localRotation = template.transform.localRotation;
+			button.transform.localScale = template.transform.localScale;
+
+			button.AddComponent<ToggleEnableButton>();
+
+			GameObject.Destroy(cube);
 		}
 
 		public void Disable()
 		{
 			// TODO: Show normal cosmetics
-			// TODO: Destroy page view buttons and navigation buttons
 			foreach (var button in wardrobe.wardrobeItemButtons)
 			{
 				var oldButton = button.GetComponent<BaseCosmeticButton>();
@@ -108,8 +136,6 @@ namespace GorillaCosmetics.UI
 
 		public void Enable()
 		{
-			// TODO: Create view buttons
-
 			try
 			{
 				// This is as resilient as I can think to make it,
@@ -149,7 +175,7 @@ namespace GorillaCosmetics.UI
 				Debug.LogError("GorillaCosmetics: Failed to create direction buttons: " + e.Message + "\n" + e.StackTrace);
 			}
 
-			SetView(ISelectionManager.SelectionView.Material);
+			SetView(ISelectionManager.SelectionView.Hat);
 		}
 
 		public void NextPage()

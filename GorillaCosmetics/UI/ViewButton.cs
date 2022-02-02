@@ -31,6 +31,7 @@ namespace GorillaCosmetics.UI
 		public void OnDestroy()
 		{
 			wardrobeFunctionButton.enabled = true;
+			myText.text = wardrobeFunctionButton.myText.text;
 		}
 
 		public void Update()
