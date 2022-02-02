@@ -18,7 +18,7 @@ namespace GorillaCosmetics.UI
 				child.gameObject.SetActive(false);
 			}
 
-			pressedMaterial = wardrobeItemButton.pressedMaterial ;
+			pressedMaterial = wardrobeItemButton.pressedMaterial;
 			unpressedMaterial = wardrobeItemButton.unpressedMaterial;
 			buttonRenderer = wardrobeItemButton.buttonRenderer;
 			debounceTime = wardrobeItemButton.debounceTime;

@@ -30,6 +30,13 @@ namespace GorillaCosmetics.UI
 			}
 		}
 
+		void Awake()
+		{
+			base.Awake();
+
+			Plugin.SelectionManager.OnCosmeticsUpdated += UpdateButton;
+		}
+
 		public new void OnDestroy()
 		{
 			base.OnDestroy();
@@ -52,6 +59,21 @@ namespace GorillaCosmetics.UI
 			{
 				GameObject head = wardrobeItemButton.controlledModel.gameObject;
 				previewOrb = Material.GetPreviewOrb(head.transform);
+			}
+
+			UpdateButton();
+		}
+
+		void UpdateButton()
+		{
+			if (Plugin.SelectionManager.CurrentMaterial == Material)
+			{
+				myText.text = onText;
+				buttonRenderer.material = pressedMaterial;
+			} else
+			{
+				myText.text = offText;
+				buttonRenderer.material = unpressedMaterial;
 			}
 		}
 	}

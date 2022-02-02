@@ -28,6 +28,14 @@ namespace GorillaCosmetics.UI
 			{
 				Plugin.SelectionManager.ResetHat();
 			}
+			UpdateButton();
+		}
+
+		new void Awake()
+		{
+			base.Awake();
+
+			Plugin.SelectionManager.OnCosmeticsUpdated += UpdateButton;
 		}
 
 		public new void OnDestroy()
@@ -57,6 +65,21 @@ namespace GorillaCosmetics.UI
 				previewHat.transform.localPosition = Constants.PreviewHatLocalPosition;
 				previewHat.transform.localRotation = Constants.PreviewHatLocalRotation;
 				previewHat.transform.localScale = Constants.PreviewHatLocalScale;
+			}
+
+			UpdateButton();
+		}
+
+		void UpdateButton()
+		{
+			if (Plugin.SelectionManager.CurrentHat == Hat)
+			{
+				myText.text = onText;
+				buttonRenderer.material = pressedMaterial;
+			} else
+			{
+				myText.text = offText;
+				buttonRenderer.material = unpressedMaterial;
 			}
 		}
 	}

@@ -68,9 +68,6 @@ namespace GorillaCosmetics.UI
 					SetMaterial(mat);
 				}
 			}
-
-			// TODO: Create Toggle Button
-			Enable();
 		}
 
 		public void Disable()
