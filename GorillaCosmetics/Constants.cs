@@ -11,10 +11,10 @@ namespace GorillaCosmetics
 		public static readonly Quaternion PreviewHatLocalRotation = Quaternion.Euler(0, 90, 100);
 		public static readonly Vector3 PreviewHatLocalScale = Vector3.one * 0.25f;
 
-		public static readonly Vector3 PreviewOrbLocalPosition = new Vector3(0, 0, 0.2f);
+		public static readonly Vector3 PreviewOrbLocalPosition = new Vector3(0, 0, 0.29f);
 		public static readonly Quaternion PreviewOrbRotation = Quaternion.identity;
-		public static readonly Vector3 PreviewOrbLocalScale = Vector3.one * 0.5f;
+		public static readonly Vector3 PreviewOrbLocalScale = Vector3.one * 0.45f;
 
-		public static readonly Vector3 PreviewOrbHeadModelLocalPositionOffset = new Vector3(-0.6f, 0, 0.1f);
+		public static readonly Vector3 PreviewOrbHeadModelLocalPositionOffset = new Vector3(-0.6f, 0, 0f);
 	}
 }
