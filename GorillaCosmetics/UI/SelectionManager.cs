@@ -31,8 +31,9 @@ namespace GorillaCosmetics.UI
 		List<GorillaMaterial> materials;
 
 		// TODO: Private
-		internal List<HatButton> hatButtons;
-		internal List<MaterialButton> materialButtons;
+		internal List<HatButton> hatButtons = new();
+		internal List<MaterialButton> materialButtons = new();
+		List<PageButton> pageButtons = new();
 
 		GameObject previewHat;
 		GameObject previewOrb;
@@ -83,6 +84,12 @@ namespace GorillaCosmetics.UI
 				}
 			}
 
+			foreach(PageButton pageButton in pageButtons)
+			{
+				GameObject.Destroy(pageButton);
+			}
+			pageButtons = new();
+
 			// TODO: Fix
 			CosmeticsController.instance.PressWardrobeFunctionButton("hat");
 			CosmeticsController.instance.PressWardrobeFunctionButton("right");
@@ -91,8 +98,31 @@ namespace GorillaCosmetics.UI
 
 		public void Enable()
 		{
-			// TODO: Create page view buttons and navigation buttons
-			//SetView(ISelectionManager.SelectionView.Hat);
+			// TODO: Create view buttons
+
+			try
+			{
+				// This is as resilient as I can think to make it,
+				// but it is likely to break with any update that moves the wardrobe around.
+				foreach (Transform transform in wardrobe.wardrobeItemButtons[0].transform.parent)
+				{
+					if (transform.name.Contains("Left") || transform.name.Contains("left"))
+					{
+						var pageButton = transform.gameObject.AddComponent<PageButton>();
+						pageButton.Forward = false;
+						pageButtons.Add(pageButton);
+					} else if (transform.name.Contains("Right") || transform.name.Contains("right"))
+					{
+						var pageButton = transform.gameObject.AddComponent<PageButton>();
+						pageButton.Forward = true;
+						pageButtons.Add(pageButton);
+					}
+				}
+			} catch (Exception e)
+			{
+				Debug.LogError("GorillaCosmetics: Failed to create direction buttons: " + e.Message + "\n" + e.StackTrace);
+			}
+
 			SetView(ISelectionManager.SelectionView.Material);
 		}
 
