@@ -82,6 +82,11 @@ namespace GorillaCosmetics.UI
 					UnityEngine.Object.DestroyImmediate(oldButton);
 				}
 			}
+
+			// TODO: Fix
+			CosmeticsController.instance.PressWardrobeFunctionButton("hat");
+			CosmeticsController.instance.PressWardrobeFunctionButton("right");
+			CosmeticsController.instance.PressWardrobeFunctionButton("left");
 		}
 
 		public void Enable()
