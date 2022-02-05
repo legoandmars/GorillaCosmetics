@@ -63,6 +63,15 @@ namespace GorillaCosmetics.UI
 				}
 			}
 
+			if (matString.StartsWith(PlayerPrefsPrefix))
+			{
+				var mat = Plugin.AssetLoader.GetAsset<GorillaMaterial>(matString.Substring(PlayerPrefsPrefix.Length));
+				if (mat != null)
+				{
+					SetMaterial(mat);
+				}
+			}
+
 			CreateEnableButton();
 		}
 
