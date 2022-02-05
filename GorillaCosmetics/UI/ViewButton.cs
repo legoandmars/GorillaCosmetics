@@ -16,6 +16,8 @@ namespace GorillaCosmetics.UI
 
 		bool sendPress = false;
 
+		string defaultText;
+
 		public void Awake()
 		{
 			wardrobeFunctionButton = GetComponent<WardrobeFunctionButton>();
@@ -26,17 +28,18 @@ namespace GorillaCosmetics.UI
 			buttonRenderer = wardrobeFunctionButton.buttonRenderer;
 			debounceTime = wardrobeFunctionButton.debounceTime;
 			myText = wardrobeFunctionButton.myText;
+
+			defaultText = myText.text;
 		}
 
 		public void OnDestroy()
 		{
 			wardrobeFunctionButton.enabled = true;
-			myText.text = wardrobeFunctionButton.myText.text;
+			myText.text = defaultText;
 		}
 
 		public void Update()
 		{
-
 			if (sendPress)
 			{
 				sendPress = false;
