@@ -25,7 +25,13 @@ namespace GorillaCosmetics
 
 		public void SetHat(GorillaHat hat)
 		{
-			Debug.Log($"Player: {rig.playerName} switching hat from {CurrentHat?.Descriptor?.Name} to {hat?.Descriptor?.Name}");
+			if (hat == null)
+			{
+				ResetHat();
+				return;
+			}
+
+			Debug.Log($"Player: {rig.myPlayer?.NickName} switching hat from {CurrentHat?.Descriptor?.Name} to {hat?.Descriptor?.Name}");
 			CurrentHat = hat;
 
 			if (currentHatObject != null)
@@ -44,7 +50,7 @@ namespace GorillaCosmetics
 
 		public void ResetHat()
 		{
-			Debug.Log($"Player: {rig.playerName} resetting hat");
+			Debug.Log($"Player: {rig.myPlayer?.NickName} resetting hat");
 
 			if (currentHatObject != null)
 			{
@@ -57,7 +63,13 @@ namespace GorillaCosmetics
 
 		public void SetMaterial(GorillaMaterial material)
 		{
-			Debug.Log($"Player: {rig.playerName} switching material from {CurrentMaterial?.Descriptor?.Name} to {material?.Descriptor?.Name}");
+			if (material == null)
+			{
+				ResetMaterial();
+				return;
+			}
+
+			Debug.Log($"Player: {rig.myPlayer?.NickName} switching material from {CurrentMaterial?.Descriptor?.Name} to {material?.Descriptor?.Name}");
 
 			if (CurrentMaterial == null)
 			{
@@ -69,12 +81,12 @@ namespace GorillaCosmetics
 			{
 				// TODO: Custom color support
 			}
-			SetVRRigMaterial(material.Material);
+			SetVRRigMaterial(material.GetMaterial());
 		}
 
 		public void ResetMaterial()
 		{
-			Debug.Log($"Player: {rig.playerName} resetting material");
+			Debug.Log($"Player: {rig.myPlayer?.NickName} resetting material");
 
 			if (defaultMaterial != null)
 			{

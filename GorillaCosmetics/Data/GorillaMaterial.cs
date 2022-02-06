@@ -10,7 +10,7 @@ namespace GorillaCosmetics.Data
         public AssetBundle AssetBundle { get; }
         public CosmeticDescriptor Descriptor { get; }
 
-        public Material Material;
+        Material material;
 
         public GorillaMaterial(string path)
         {
@@ -26,7 +26,7 @@ namespace GorillaCosmetics.Data
 
                     // get material object and stuff
                     GameObject materialObject = AssetBundle.LoadAsset<GameObject>("_Material");
-                    Material = materialObject.GetComponent<Renderer>().material;
+                    material = materialObject.GetComponent<Renderer>().material;
 
                     // Make Descriptor
                     Descriptor = PackageUtils.ConvertJsonToDescriptor(json);
@@ -44,9 +44,14 @@ namespace GorillaCosmetics.Data
                 Descriptor = new CosmeticDescriptor();
                 Descriptor.Name = "Default";
                 Descriptor.CustomColors = true;
-                Material = Resources.Load<Material>("objects/treeroom/materials/lightfur");
+                material = Resources.Load<Material>("objects/treeroom/materials/lightfur");
             }
         }
+
+        public Material GetMaterial()
+		{
+            return UnityEngine.Object.Instantiate(material);
+		}
 
         public GameObject GetPreviewOrb(Transform parent)
 		{
@@ -56,7 +61,7 @@ namespace GorillaCosmetics.Data
             gameObject.transform.localPosition = Constants.PreviewOrbLocalPosition;
             gameObject.transform.rotation = Constants.PreviewOrbRotation;
             gameObject.transform.localScale = Constants.PreviewOrbLocalScale;
-			gameObject.GetComponent<Renderer>().material = Material;
+			gameObject.GetComponent<Renderer>().material = material;
             return gameObject;
 		}
     }
