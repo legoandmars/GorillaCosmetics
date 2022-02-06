@@ -22,6 +22,10 @@ namespace GorillaCosmetics
 		{
 			base.OnJoinedRoom();
 			UpdatePlayerCosmetics();
+			foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values)
+			{
+				OnPlayerPropertiesUpdate(player, player.CustomProperties);
+			}
 		}
 
 		public void UpdatePlayerCosmetics()
@@ -29,14 +33,8 @@ namespace GorillaCosmetics
 			if (PhotonNetwork.InRoom)
 			{
 				Hashtable customProperties = new Hashtable();
-				if (Plugin.SelectionManager.CurrentHat != null)
-				{
-					customProperties.Add(CustomHatKey, Plugin.SelectionManager.CurrentHat.Descriptor.Name);
-				}
-				if (Plugin.SelectionManager.CurrentMaterial != null)
-				{
-					customProperties.Add(CustomMaterialKey, Plugin.SelectionManager.CurrentMaterial.Descriptor.Name);
-				}
+				customProperties.Add(CustomHatKey, Plugin.SelectionManager.CurrentHat?.Descriptor?.Name);
+				customProperties.Add(CustomMaterialKey, Plugin.SelectionManager.CurrentMaterial?.Descriptor?.Name);
 
 				if (customProperties.Count > 0)
 				{
