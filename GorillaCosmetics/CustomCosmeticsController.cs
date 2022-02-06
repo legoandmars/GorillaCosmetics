@@ -17,6 +17,7 @@ namespace GorillaCosmetics
 		Material defaultMaterial;
 
 		VRRig rig;
+		string NickName => rig.photonView?.Owner?.NickName ?? "SELF";
 
 		void Start()
 		{
@@ -31,7 +32,7 @@ namespace GorillaCosmetics
 				return;
 			}
 
-			Debug.Log($"Player: {rig.myPlayer?.NickName} switching hat from {CurrentHat?.Descriptor?.Name} to {hat?.Descriptor?.Name}");
+			Debug.Log($"Player: {NickName} switching hat from {CurrentHat?.Descriptor?.Name} to {hat?.Descriptor?.Name}");
 			CurrentHat = hat;
 
 			if (currentHatObject != null)
@@ -50,7 +51,7 @@ namespace GorillaCosmetics
 
 		public void ResetHat()
 		{
-			Debug.Log($"Player: {rig.myPlayer?.NickName} resetting hat");
+			Debug.Log($"Player: {NickName} resetting hat");
 
 			if (currentHatObject != null)
 			{
@@ -69,7 +70,7 @@ namespace GorillaCosmetics
 				return;
 			}
 
-			Debug.Log($"Player: {rig.myPlayer?.NickName} switching material from {CurrentMaterial?.Descriptor?.Name} to {material?.Descriptor?.Name}");
+			Debug.Log($"Player: {NickName} switching material from {CurrentMaterial?.Descriptor?.Name} to {material?.Descriptor?.Name}");
 
 			if (CurrentMaterial == null)
 			{
@@ -86,7 +87,7 @@ namespace GorillaCosmetics
 
 		public void ResetMaterial()
 		{
-			Debug.Log($"Player: {rig.myPlayer?.NickName} resetting material");
+			Debug.Log($"Player: {NickName} resetting material");
 
 			if (defaultMaterial != null)
 			{
