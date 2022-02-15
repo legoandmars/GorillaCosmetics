@@ -10,24 +10,30 @@ namespace GorillaCosmetics
 {
 	public class AssetLoader : IAssetLoader
 	{
-        const string MaterialsLocation = "Materials";
-        const string HatsLocation = "Hats";
+		const string MaterialsLocation = "Materials";
+		const string HatsLocation = "Hats";
 
 		//List<IAsset> assets;
-        Dictionary<Type, List<IAsset>> assets;
+		Dictionary<Type, List<IAsset>> assets;
 
-        public AssetLoader()
+		public AssetLoader()
 		{
-            assets = GetAllAssets();
+			assets = GetAllAssets();
 		}
 
 		public T GetAsset<T>(string name) where T : IAsset
 		{
-            string formattedName = name.Trim().ToLower();
-
-            if (assets.TryGetValue(typeof(T), out var assetList))
+			if (name == null)
 			{
-                foreach(IAsset asset in assetList)
+				Debug.LogError($"AssetLoader: GetAsset<{typeof(T).Name}> called with null name");
+				return default;
+			}
+
+			string formattedName = name.Trim().ToLower();
+
+			if (assets.TryGetValue(typeof(T), out var assetList))
+			{
+				foreach(IAsset asset in assetList)
 				{
 					// TODO: Check to make sure this works with networking (it probally doesn't)
 					if (asset.Descriptor.Name.Trim().ToLower() == formattedName)
@@ -37,119 +43,119 @@ namespace GorillaCosmetics
 				}
 			}
 
-            return default;
+			return default;
 		}
 
 		public List<T> GetAssets<T>() where T : IAsset
 		{
-            if (assets.TryGetValue(typeof(T), out var assetList))
+			if (assets.TryGetValue(typeof(T), out var assetList))
 			{
-                List<T> list = new();
-                foreach(var asset in assetList)
+				List<T> list = new();
+				foreach(var asset in assetList)
 				{
-                    list.Add((T)asset);
+					list.Add((T)asset);
 				}
-                return list;
+				return list;
 			} else
 			{
-                return default;
+				return default;
 			}
 		}
 
-        static Dictionary<Type, List<IAsset>> GetAllAssets()
+		static Dictionary<Type, List<IAsset>> GetAllAssets()
 		{
-            Dictionary<Type, List<IAsset>> newAssets = new();
-            string folder = Path.GetDirectoryName(typeof(Plugin).Assembly.Location);
+			Dictionary<Type, List<IAsset>> newAssets = new();
+			string folder = Path.GetDirectoryName(typeof(Plugin).Assembly.Location);
 
-            // Load Materials
-            IEnumerable<string> filter = new List<string> { "*.material", "*.gmat" };
-            var materialFiles = GetFileNames($"{folder}\\{MaterialsLocation}", filter, SearchOption.TopDirectoryOnly, false);
-            var gorillaMaterialObjects = (IEnumerable<IAsset>)LoadMaterials(materialFiles);
-            newAssets.Add(typeof(GorillaMaterial), gorillaMaterialObjects.ToList());
+			// Load Materials
+			IEnumerable<string> filter = new List<string> { "*.material", "*.gmat" };
+			var materialFiles = GetFileNames($"{folder}\\{MaterialsLocation}", filter, SearchOption.TopDirectoryOnly, false);
+			var gorillaMaterialObjects = (IEnumerable<IAsset>)LoadMaterials(materialFiles);
+			newAssets.Add(typeof(GorillaMaterial), gorillaMaterialObjects.ToList());
 
-            // Load Hats
-            IEnumerable<string> hatFilter = new List<string> { "*.hat", "*.ghat" };
-            var hatFiles = GetFileNames($"{folder}\\{HatsLocation}", hatFilter, SearchOption.TopDirectoryOnly, false);
-            var gorillaHatObjects = (IEnumerable<IAsset>)LoadHats(hatFiles);
-            newAssets.Add(typeof(GorillaHat), gorillaHatObjects.ToList());
+			// Load Hats
+			IEnumerable<string> hatFilter = new List<string> { "*.hat", "*.ghat" };
+			var hatFiles = GetFileNames($"{folder}\\{HatsLocation}", hatFilter, SearchOption.TopDirectoryOnly, false);
+			var gorillaHatObjects = (IEnumerable<IAsset>)LoadHats(hatFiles);
+			newAssets.Add(typeof(GorillaHat), gorillaHatObjects.ToList());
 
-            return newAssets;
+			return newAssets;
 		}
 
-        static IEnumerable<GorillaMaterial> LoadMaterials(IEnumerable<string> materialFiles)
-        {
-            IList<GorillaMaterial> materials = new List<GorillaMaterial> { new GorillaMaterial("Default") };
-            foreach (string materialFile in materialFiles)
-            {
-                try
-                {
+		static IEnumerable<GorillaMaterial> LoadMaterials(IEnumerable<string> materialFiles)
+		{
+			IList<GorillaMaterial> materials = new List<GorillaMaterial> { new GorillaMaterial("Default") };
+			foreach (string materialFile in materialFiles)
+			{
+				try
+				{
 					materials.Add(new GorillaMaterial(materialFile));
-                }
-                catch (Exception ex)
+				}
+				catch (Exception ex)
 				{
 					File.Move(materialFile, $"{materialFile}.broken");
-                    Debug.LogWarning($"Removed broken cosmetic: {materialFile}");
-                }
-            }
-            return materials;
-        }
+					Debug.LogWarning($"Removed broken cosmetic: {materialFile}");
+				}
+			}
+			return materials;
+		}
 
-        static IEnumerable<GorillaHat> LoadHats(IEnumerable<string> hatFiles)
-        {
-            IList<GorillaHat> hats = new List<GorillaHat>(); // { new GorillaHat("Default") };
-            foreach (string hatFile in hatFiles)
-            {
-                try
-                {
+		static IEnumerable<GorillaHat> LoadHats(IEnumerable<string> hatFiles)
+		{
+			IList<GorillaHat> hats = new List<GorillaHat>(); // { new GorillaHat("Default") };
+			foreach (string hatFile in hatFiles)
+			{
+				try
+				{
 					hats.Add(new GorillaHat(hatFile));
-                }
-                catch (Exception ex)
-                {
+				}
+				catch (Exception ex)
+				{
 					File.Move(hatFile, $"{hatFile}.broken");
-                    Debug.LogWarning($"Removed broken cosmetic: {hatFile}");
-                }
-            }
-            return hats;
-        }
+					Debug.LogWarning($"Removed broken cosmetic: {hatFile}");
+				}
+			}
+			return hats;
+		}
 
-        /// <summary>
-        /// Gets every file matching the filter in a path.
-        /// </summary>
-        /// <param name="path">Directory to search in.</param>
-        /// <param name="filters">Pattern(s) to search for.</param>
-        /// <param name="searchOption">Search options.</param>
-        /// <param name="returnShortPath">Remove path from filepaths.</param>
-        public static IEnumerable<string> GetFileNames(string path, IEnumerable<string> filters, SearchOption searchOption, bool returnShortPath = false)
-        {
-            IList<string> filePaths = new List<string>();
+		/// <summary>
+		/// Gets every file matching the filter in a path.
+		/// </summary>
+		/// <param name="path">Directory to search in.</param>
+		/// <param name="filters">Pattern(s) to search for.</param>
+		/// <param name="searchOption">Search options.</param>
+		/// <param name="returnShortPath">Remove path from filepaths.</param>
+		public static IEnumerable<string> GetFileNames(string path, IEnumerable<string> filters, SearchOption searchOption, bool returnShortPath = false)
+		{
+			IList<string> filePaths = new List<string>();
 
-            foreach (string filter in filters)
-            {
-                IEnumerable<string> directoryFiles = Directory.GetFiles(path, filter, searchOption);
+			foreach (string filter in filters)
+			{
+				IEnumerable<string> directoryFiles = Directory.GetFiles(path, filter, searchOption);
 
-                if (returnShortPath)
-                {
-                    foreach (string directoryFile in directoryFiles)
-                    {
-                        string filePath = directoryFile.Replace(path, "");
-                        if (filePath.Length > 0 && filePath.StartsWith(@"\"))
-                        {
-                            filePath = filePath.Substring(1, filePath.Length - 1);
-                        }
+				if (returnShortPath)
+				{
+					foreach (string directoryFile in directoryFiles)
+					{
+						string filePath = directoryFile.Replace(path, "");
+						if (filePath.Length > 0 && filePath.StartsWith(@"\"))
+						{
+							filePath = filePath.Substring(1, filePath.Length - 1);
+						}
 
-                        if (!string.IsNullOrWhiteSpace(filePath) && !filePaths.Contains(filePath))
-                        {
-                            filePaths.Add(filePath);
-                        }
-                    }
-                }
-                else
-                {
-                    filePaths = filePaths.Union(directoryFiles).ToList();
-                }
-            }
+						if (!string.IsNullOrWhiteSpace(filePath) && !filePaths.Contains(filePath))
+						{
+							filePaths.Add(filePath);
+						}
+					}
+				}
+				else
+				{
+					filePaths = filePaths.Union(directoryFiles).ToList();
+				}
+			}
 
-            return filePaths.Distinct();
-        }
+			return filePaths.Distinct();
+		}
 	}
 }

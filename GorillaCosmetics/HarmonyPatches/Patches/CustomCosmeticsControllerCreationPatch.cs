@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using HarmonyLib;
+using UnityEngine;
 
 namespace GorillaCosmetics.HarmonyPatches.Patches
 {
@@ -11,6 +12,7 @@ namespace GorillaCosmetics.HarmonyPatches.Patches
 	{
 		internal static void Postfix(VRRig __instance)
 		{
+			Debug.Log($"GorillaCosmetics: Creating CustomCosmeticsController for {__instance.photonView?.Owner?.NickName ?? "SELF"}");
 			__instance.gameObject.AddComponent<CustomCosmeticsController>();
 		}
 	}

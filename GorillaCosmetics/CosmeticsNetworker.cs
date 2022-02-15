@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using ExitGames.Client.Photon;
 using GorillaCosmetics.Data;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace GorillaCosmetics
 {
@@ -21,9 +24,15 @@ namespace GorillaCosmetics
 		public override void OnJoinedRoom()
 		{
 			base.OnJoinedRoom();
+			StartCoroutine(OnJoinedRoomCoroutine());
+		}
+
+		IEnumerator OnJoinedRoomCoroutine() {
+			yield return 1;
 			UpdatePlayerCosmetics();
 			foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values)
 			{
+				Debug.Log($"Player {player.NickName} joined room with custom properties {String.Join(", ", player.CustomProperties.Keys)}");
 				OnPlayerPropertiesUpdate(player, player.CustomProperties);
 			}
 		}
@@ -45,25 +54,72 @@ namespace GorillaCosmetics
 
 		public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
 		{
-			base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
-			var customCosmeticsController = GorillaGameManager.instance.FindVRRigForPlayer(targetPlayer).GetComponent<ICustomCosmeticsController>();
-
-			if (changedProps.TryGetValue(CustomHatKey, out var hatObj))
+			try
 			{
-				var hat = Plugin.AssetLoader.GetAsset<GorillaHat>(hatObj as string);
-				if (hat != default)
+				base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
+				Debug.Log($"Player {targetPlayer.NickName} updated custom properties {String.Join(", ", changedProps.Keys)}");
+
+				var customCosmeticsControllerObject = GorillaGameManager.instance.FindVRRigForPlayer(targetPlayer);
+				if (customCosmeticsControllerObject == null)
 				{
-					customCosmeticsController.SetHat(hat);
+					Debug.LogWarning($"Player {targetPlayer.NickName}'s VRRig not found");
+					return;
+				}
+				var customCosmeticsController = customCosmeticsControllerObject.GetComponent<ICustomCosmeticsController>();
+				if (customCosmeticsController == null)
+				{
+					Debug.LogWarning($"Player {targetPlayer.NickName} has no CustomCosmeticsController");
+					return;
+				}
+
+				if (changedProps.TryGetValue(CustomHatKey, out var hatObj))
+				{
+					if (hatObj is string hatName)
+					{
+						Debug.Log($"Player {targetPlayer.NickName} changed hat to {hatObj}");
+						var hat = Plugin.AssetLoader.GetAsset<GorillaHat>(hatObj as string);
+						if (hat != default)
+						{
+							Debug.Log($"Player {targetPlayer.NickName} actually changed hat to {hat.Descriptor.Name}");
+							customCosmeticsController.SetHat(hat);
+						}
+						else
+						{
+							customCosmeticsController.ResetHat();
+						}
+					}
+					else
+					{
+						customCosmeticsController.ResetHat();
+					}
+
+				}
+
+				if (changedProps.TryGetValue(CustomMaterialKey, out var matObj))
+				{
+					if (matObj is string matName)
+					{
+						Debug.Log($"Player {targetPlayer.NickName} changed material to {matObj}");
+						var material = Plugin.AssetLoader.GetAsset<GorillaMaterial>(matObj as string);
+						if (material != default)
+						{
+							Debug.Log($"Player {targetPlayer.NickName} actually changed material to {material.Descriptor.Name}");
+							customCosmeticsController.SetMaterial(material);
+						}
+						else
+						{
+							customCosmeticsController.ResetMaterial();
+						}
+					}
+					else
+					{
+						customCosmeticsController.ResetMaterial();
+					}
 				}
 			}
-
-			if (changedProps.TryGetValue(CustomMaterialKey, out var matObj))
+			catch (Exception e)
 			{
-				var mat = Plugin.AssetLoader.GetAsset<GorillaMaterial>(matObj as string);
-				if (mat != default)
-				{
-					customCosmeticsController.SetMaterial(mat);
-				}
+				Debug.LogError($"Error while updating player cosmetics for {targetPlayer.NickName}: {e}");
 			}
 		}
 	}

@@ -22,6 +22,7 @@ namespace GorillaCosmetics
 		void Start()
 		{
 			rig = GetComponent<VRRig>();
+			defaultMaterial = rig.mainSkin.material;
 		}
 
 		public void SetHat(GorillaHat hat)
@@ -71,11 +72,6 @@ namespace GorillaCosmetics
 			}
 
 			Debug.Log($"Player: {NickName} switching material from {CurrentMaterial?.Descriptor?.Name} to {material?.Descriptor?.Name}");
-
-			if (CurrentMaterial == null)
-			{
-				defaultMaterial = rig.mainSkin.material;
-			}
 
 			CurrentMaterial = material;
 			SetVRRigMaterial(material.GetMaterial());
