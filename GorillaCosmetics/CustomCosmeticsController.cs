@@ -78,10 +78,6 @@ namespace GorillaCosmetics
 			}
 
 			CurrentMaterial = material;
-			if (material.Descriptor.CustomColors)
-			{
-				// TODO: Custom color support
-			}
 			SetVRRigMaterial(material.GetMaterial());
 		}
 
@@ -97,6 +93,11 @@ namespace GorillaCosmetics
 			CurrentMaterial = null;
 		}
 
+		public void SetColor(float red, float blue, float green) {
+			Debug.Log($"Player: {NickName} changing color to {red}, {blue}, {green}");
+			defaultMaterial.color = new Color(red, blue, green);
+		}
+
 		void SetVRRigMaterial(Material material)
 		{
 			rig.materialsToChangeTo[0] = material;
@@ -104,6 +105,8 @@ namespace GorillaCosmetics
 			{
 				rig.ChangeMaterialLocal(0);
 			}
+
+			rig.InitializeNoobMaterialLocal(defaultMaterial.color.r, defaultMaterial.color.g, defaultMaterial.color.b);
 		}
 	}
 }
