@@ -12,7 +12,7 @@ namespace GorillaCosmetics.HarmonyPatches.Patches
 	{
 		internal static void Postfix(VRRig __instance)
 		{
-			Debug.Log($"GorillaCosmetics: Creating CustomCosmeticsController for {__instance.photonView?.Owner?.NickName ?? "SELF"}");
+			Plugin.Log($"GorillaCosmetics: Creating CustomCosmeticsController for {__instance.photonView?.Owner?.NickName ?? "SELF"}");
 			__instance.gameObject.AddComponent<CustomCosmeticsController>();
 		}
 	}

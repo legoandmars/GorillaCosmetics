@@ -37,7 +37,7 @@ namespace GorillaCosmetics.Data
                 catch (Exception err)
                 {
                     // loading failed. that's not good.
-                    Debug.Log(err);
+                    Debug.LogError(err);
                     throw new Exception($"Loading hat at {path} failed.");
                 }
             } else

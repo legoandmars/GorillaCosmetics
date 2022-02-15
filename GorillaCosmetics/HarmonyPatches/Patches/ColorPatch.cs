@@ -16,11 +16,6 @@ namespace GorillaCosmetics.HarmonyPatches.Patches
 				controller.SetColor(red, green, blue);
 			}
 			var boolean = controller?.CurrentMaterial?.Descriptor.CustomColors ?? true;
-			Debug.Log($"Controller is null: {controller == null}");
-			Debug.Log($"CurrentMaterial is null: {controller?.CurrentMaterial == null}");
-			Debug.Log($"CustomColors is null: {controller?.CurrentMaterial?.Descriptor.CustomColors == null}");
-			Debug.Log($"CustomColors is {controller?.CurrentMaterial?.Descriptor.CustomColors}");
-			Debug.Log($"GorillaCosmetics: Continue with method? {boolean}");
 			return boolean;
 		}
 	}

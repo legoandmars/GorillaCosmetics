@@ -32,7 +32,6 @@ namespace GorillaCosmetics
 			UpdatePlayerCosmetics();
 			foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values)
 			{
-				Debug.Log($"Player {player.NickName} joined room with custom properties {String.Join(", ", player.CustomProperties.Keys)}");
 				OnPlayerPropertiesUpdate(player, player.CustomProperties);
 			}
 		}
@@ -57,30 +56,17 @@ namespace GorillaCosmetics
 			try
 			{
 				base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
-				Debug.Log($"Player {targetPlayer.NickName} updated custom properties {String.Join(", ", changedProps.Keys)}");
 
-				var customCosmeticsControllerObject = GorillaGameManager.instance.FindVRRigForPlayer(targetPlayer);
-				if (customCosmeticsControllerObject == null)
-				{
-					Debug.LogWarning($"Player {targetPlayer.NickName}'s VRRig not found");
-					return;
-				}
-				var customCosmeticsController = customCosmeticsControllerObject.GetComponent<ICustomCosmeticsController>();
-				if (customCosmeticsController == null)
-				{
-					Debug.LogWarning($"Player {targetPlayer.NickName} has no CustomCosmeticsController");
-					return;
-				}
+                var customCosmeticsController = GorillaGameManager.instance.FindVRRigForPlayer(targetPlayer).GetComponent<ICustomCosmeticsController>();
 
 				if (changedProps.TryGetValue(CustomHatKey, out var hatObj))
 				{
 					if (hatObj is string hatName)
 					{
-						Debug.Log($"Player {targetPlayer.NickName} changed hat to {hatObj}");
+						Plugin.Log($"Player {targetPlayer.NickName} changed hat to {hatObj}");
 						var hat = Plugin.AssetLoader.GetAsset<GorillaHat>(hatObj as string);
 						if (hat != default)
 						{
-							Debug.Log($"Player {targetPlayer.NickName} actually changed hat to {hat.Descriptor.Name}");
 							customCosmeticsController.SetHat(hat);
 						}
 						else
@@ -99,11 +85,10 @@ namespace GorillaCosmetics
 				{
 					if (matObj is string matName)
 					{
-						Debug.Log($"Player {targetPlayer.NickName} changed material to {matObj}");
+						Plugin.Log($"Player {targetPlayer.NickName} changed material to {matObj}");
 						var material = Plugin.AssetLoader.GetAsset<GorillaMaterial>(matObj as string);
 						if (material != default)
 						{
-							Debug.Log($"Player {targetPlayer.NickName} actually changed material to {material.Descriptor.Name}");
 							customCosmeticsController.SetMaterial(material);
 						}
 						else

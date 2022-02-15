@@ -33,6 +33,13 @@ namespace GorillaCosmetics
             gameObject.AddComponent<CosmeticsNetworker>();
 		}
 
+        public static void Log(object message)
+        {
+# if DEBUG
+            Debug.Log(message);
+#endif
+        }
+
 # if DEBUG
         void OnGUI()
 		{

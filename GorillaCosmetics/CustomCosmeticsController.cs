@@ -33,7 +33,7 @@ namespace GorillaCosmetics
 				return;
 			}
 
-			Debug.Log($"Player: {NickName} switching hat from {CurrentHat?.Descriptor?.Name} to {hat?.Descriptor?.Name}");
+			Plugin.Log($"Player: {NickName} switching hat from {CurrentHat?.Descriptor?.Name} to {hat?.Descriptor?.Name}");
 			CurrentHat = hat;
 
 			if (currentHatObject != null)
@@ -52,7 +52,7 @@ namespace GorillaCosmetics
 
 		public void ResetHat()
 		{
-			Debug.Log($"Player: {NickName} resetting hat");
+			Plugin.Log($"Player: {NickName} resetting hat");
 
 			if (currentHatObject != null)
 			{
@@ -71,7 +71,7 @@ namespace GorillaCosmetics
 				return;
 			}
 
-			Debug.Log($"Player: {NickName} switching material from {CurrentMaterial?.Descriptor?.Name} to {material?.Descriptor?.Name}");
+			Plugin.Log($"Player: {NickName} switching material from {CurrentMaterial?.Descriptor?.Name} to {material?.Descriptor?.Name}");
 
 			CurrentMaterial = material;
 			SetVRRigMaterial(material.GetMaterial());
@@ -79,7 +79,7 @@ namespace GorillaCosmetics
 
 		public void ResetMaterial()
 		{
-			Debug.Log($"Player: {NickName} resetting material");
+			Plugin.Log($"Player: {NickName} resetting material");
 
 			if (defaultMaterial != null)
 			{
@@ -89,8 +89,9 @@ namespace GorillaCosmetics
 			CurrentMaterial = null;
 		}
 
-		public void SetColor(float red, float blue, float green) {
-			Debug.Log($"Player: {NickName} changing color to {red}, {blue}, {green}");
+		public void SetColor(float red, float blue, float green)
+		{
+			Plugin.Log($"Player: {NickName} changing color to {red}, {blue}, {green}");
 			defaultMaterial.color = new Color(red, blue, green);
 		}
 

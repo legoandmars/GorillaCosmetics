@@ -25,7 +25,6 @@ namespace GorillaCosmetics
 		{
 			if (name == null)
 			{
-				Debug.LogError($"AssetLoader: GetAsset<{typeof(T).Name}> called with null name");
 				return default;
 			}
 
