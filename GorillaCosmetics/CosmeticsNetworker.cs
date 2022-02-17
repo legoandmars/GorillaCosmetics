@@ -11,7 +11,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace GorillaCosmetics
 {
-	public class CosmeticsNetworker : MonoBehaviourPunCallbacks
+	public class CosmeticsNetworker : MonoBehaviourPunCallbacks, ICosmeticsNetworker
 	{
 		private const string CustomHatKey = "GorillaCosmetics::CustomHat";
 		private const string CustomMaterialKey = "GorillaCosmetics::Material";
@@ -23,20 +23,10 @@ namespace GorillaCosmetics
 
 		public override void OnJoinedRoom()
 		{
-			base.OnJoinedRoom();
-			StartCoroutine(OnJoinedRoomCoroutine());
-		}
-
-		IEnumerator OnJoinedRoomCoroutine() {
-			yield return 1;
 			UpdatePlayerCosmetics();
-			foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values)
-			{
-				OnPlayerPropertiesUpdate(player, player.CustomProperties);
-			}
 		}
 
-		public void UpdatePlayerCosmetics()
+		void UpdatePlayerCosmetics()
 		{
 			if (PhotonNetwork.InRoom)
 			{
@@ -57,7 +47,8 @@ namespace GorillaCosmetics
 			{
 				base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
 
-                var customCosmeticsController = GorillaGameManager.instance.FindVRRigForPlayer(targetPlayer).GetComponent<ICustomCosmeticsController>();
+				var customCosmeticsControllerObject = GorillaGameManager.instance.FindVRRigForPlayer(targetPlayer);
+				var customCosmeticsController = customCosmeticsControllerObject.GetComponent<ICustomCosmeticsController>();
 
 				if (changedProps.TryGetValue(CustomHatKey, out var hatObj))
 				{

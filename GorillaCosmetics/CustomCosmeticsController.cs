@@ -1,5 +1,6 @@
 ﻿using GorillaCosmetics.Data;
 using GorillaNetworking;
+using Photon.Realtime;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,6 +24,12 @@ namespace GorillaCosmetics
 		{
 			rig = GetComponent<VRRig>();
 			defaultMaterial = rig.mainSkin.material;
+
+			Player player = rig.photonView?.Owner;
+			if (player != null)
+			{
+				Plugin.CosmeticsNetworker.OnPlayerPropertiesUpdate(player, player.CustomProperties);
+			}
 		}
 
 		public void SetHat(GorillaHat hat)

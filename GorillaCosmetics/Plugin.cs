@@ -18,6 +18,7 @@ namespace GorillaCosmetics
     {
 		public static IAssetLoader AssetLoader { get; private set; }
         public static ISelectionManager SelectionManager { get; private set; }
+        public static ICosmeticsNetworker CosmeticsNetworker { get; private set; }
 
         void Start()
         {
@@ -30,7 +31,7 @@ namespace GorillaCosmetics
 		{
 			AssetLoader = new AssetLoader();
             SelectionManager = new SelectionManager();
-            gameObject.AddComponent<CosmeticsNetworker>();
+		    CosmeticsNetworker = gameObject.AddComponent<CosmeticsNetworker>();
 		}
 
         public static void Log(object message)
