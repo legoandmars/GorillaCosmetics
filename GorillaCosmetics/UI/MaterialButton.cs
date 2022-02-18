@@ -30,7 +30,7 @@ namespace GorillaCosmetics.UI
 			}
 		}
 
-		void Awake()
+		new void Awake()
 		{
 			base.Awake();
 

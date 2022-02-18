@@ -58,7 +58,7 @@ namespace GorillaCosmetics.UI
 			}
 			if (Hat != null)
 			{
-				previewHat = Hat.GetAsset();
+				previewHat = Hat.GetCleanAsset();
 				HeadModel controlledModel = wardrobeItemButton.controlledModel;
 				previewHat.transform.parent = controlledModel.gameObject.transform;
 				// TODO: Get the actual proper numbers

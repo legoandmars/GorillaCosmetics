@@ -113,7 +113,6 @@ namespace GorillaCosmetics.UI
 
 		public void Disable()
 		{
-			// TODO: Show normal cosmetics
 			foreach (var button in wardrobe.wardrobeItemButtons)
 			{
 				var oldButton = button.GetComponent<BaseCosmeticButton>();
@@ -137,7 +136,6 @@ namespace GorillaCosmetics.UI
 			badgeButton.enabled = true;
 			badgeButton.myText.enabled = true;
 
-			// TODO: Fix
 			CosmeticsController.instance.PressWardrobeFunctionButton("hat");
 			CosmeticsController.instance.PressWardrobeFunctionButton("right");
 			CosmeticsController.instance.PressWardrobeFunctionButton("left");
@@ -282,7 +280,7 @@ namespace GorillaCosmetics.UI
 
 			if (CurrentHat != null)
 			{
-				previewHat = CurrentHat.GetAsset();
+				previewHat = CurrentHat.GetCleanAsset();
 				previewHat.transform.parent = parent;
 				previewHat.transform.localPosition = Constants.PreviewHatLocalPosition;
 				previewHat.transform.localRotation = Constants.PreviewHatLocalRotation;

@@ -34,7 +34,6 @@ namespace GorillaCosmetics
 			{
 				foreach(IAsset asset in assetList)
 				{
-					// TODO: Check to make sure this works with networking (it probally doesn't)
 					if (asset.Descriptor.Name.Trim().ToLower() == formattedName)
 					{
 						return (T)asset;

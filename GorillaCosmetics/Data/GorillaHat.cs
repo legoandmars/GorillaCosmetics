@@ -54,5 +54,24 @@ namespace GorillaCosmetics.Data
             gameObject.SetActive(true);
             return gameObject;
 		}
+
+        public GameObject GetCleanAsset()
+		{
+            GameObject gameObject = GetAsset();
+            void DestroyComponent<T>() where T : Component
+			{
+				var components = gameObject.GetComponentsInChildren<T>();
+				foreach(var component in components)
+				{
+					UnityEngine.Object.Destroy(component);
+				}
+			}
+
+            DestroyComponent<Light>();
+            DestroyComponent<Camera>();
+            DestroyComponent<AudioSource>();
+
+            return gameObject;
+		}
     }
 }
