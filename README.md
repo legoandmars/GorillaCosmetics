@@ -15,6 +15,8 @@ If your game isn't modded with BepinEx, DO THAT FIRST! Simply go to the [latest 
 
 This mod also depends on Newtonsoft.Json, so go to my latest [Newtonsoft.Json release](https://github.com/legoandmars/Newtonsoft.Json/releases/latest) and follow the instructions there.
 
+It also depends on Utilla, so install the latest [Utilla release](https://github.com/legoandmars/Utilla/releases/latest) as well
+
 Next, go to the [latest release of this mod](https://github.com/legoandmars/GorillaCosmetics/releases/latest) and extract it directly into your game's folder. Make sure it's extracted directly into your game's folder and not into a subfolder!
 
 The mod is now installed!
@@ -77,7 +79,11 @@ BepInEx.dll
 BepInEx.Harmony.dll
 Newtonsoft.Json
 ``` 
-from `Gorilla Tag\BepInEx\core`, and
+from `Gorilla Tag\BepInEx\core`,
+```
+Utilla.dll
+``` 
+from `Gorilla Tag\BepInEx\plugins\Utilla`, and
 ```
 Assembly-CSharp.dll
 PhotonRealtime.dll

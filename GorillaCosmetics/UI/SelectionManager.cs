@@ -30,9 +30,13 @@ namespace GorillaCosmetics.UI
 		List<GorillaHat> hats;
 		List<GorillaMaterial> materials;
 
-		// TODO: Private
+#if DEBUG
 		internal List<HatButton> hatButtons = new();
 		internal List<MaterialButton> materialButtons = new();
+#else
+		List<HatButton> hatButtons = new();
+		List<MaterialButton> materialButtons = new();
+#endif
 		List<PageButton> pageButtons = new();
 		List<ViewButton> viewButtons = new();
 		WardrobeFunctionButton badgeButton;

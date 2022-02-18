@@ -10,7 +10,6 @@ using UnityEngine;
 
 namespace GorillaCosmetics
 {
-    // TODO: Update readme build instructions
     [BepInPlugin("org.legoandmars.gorillatag.gorillacosmetics", "Gorilla Cosmetics", "2.1.1")]
     [BepInDependency("org.legoandmars.gorillatag.utilla", "1.5.0")]
     public class Plugin : BaseUnityPlugin
