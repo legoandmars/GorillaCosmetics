@@ -66,7 +66,7 @@ namespace GorillaCosmetics.UI
 
 		void UpdateButton()
 		{
-			if (Plugin.SelectionManager.CurrentMaterial == Material)
+			if (Material != null && Plugin.SelectionManager.CurrentMaterial == Material)
 			{
 				myText.text = onText;
 				buttonRenderer.material = pressedMaterial;
