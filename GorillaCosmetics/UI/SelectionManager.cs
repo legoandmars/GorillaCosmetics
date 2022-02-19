@@ -26,6 +26,7 @@ namespace GorillaCosmetics.UI
 		ICustomCosmeticsController onlineCustomCosmeticsController => GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: ew
 
 		CosmeticsController.Wardrobe wardrobe;
+		GameObject mirror;
 
 		List<GorillaHat> hats;
 		List<GorillaMaterial> materials;
@@ -140,6 +141,8 @@ namespace GorillaCosmetics.UI
 			badgeButton.enabled = true;
 			badgeButton.myText.enabled = true;
 
+			mirror?.SetActive(false);
+
 			CosmeticsController.instance.PressWardrobeFunctionButton("hat");
 			CosmeticsController.instance.PressWardrobeFunctionButton("right");
 			CosmeticsController.instance.PressWardrobeFunctionButton("left");
@@ -183,7 +186,20 @@ namespace GorillaCosmetics.UI
 				}
 			} catch (Exception e)
 			{
-				Debug.LogError("GorillaCosmetics: Failed to create direction buttons: " + e.Message + "\n" + e.StackTrace);
+				Debug.LogError($"GorillaCosmetics: Failed to create direction buttons: {e}");
+			}
+
+			try
+			{
+				if (mirror == null)
+				{
+					mirror = GameObject.Find("Level/forest/lower level/mirror (1)");
+				}
+
+				mirror?.SetActive(true);
+			} catch (Exception e)
+			{
+				Debug.LogError($"GorillaCosmetics: Failed to show mirror: {e}");
 			}
 
 			SetView(ISelectionManager.SelectionView.Hat);

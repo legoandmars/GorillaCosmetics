@@ -82,7 +82,7 @@ namespace GorillaCosmetics
 
 		static IEnumerable<GorillaMaterial> LoadMaterials(IEnumerable<string> materialFiles)
 		{
-			IList<GorillaMaterial> materials = new List<GorillaMaterial> { new GorillaMaterial("Default") };
+			List<GorillaMaterial> materials = new();
 			foreach (string materialFile in materialFiles)
 			{
 				try
@@ -100,7 +100,7 @@ namespace GorillaCosmetics
 
 		static IEnumerable<GorillaHat> LoadHats(IEnumerable<string> hatFiles)
 		{
-			IList<GorillaHat> hats = new List<GorillaHat>(); // { new GorillaHat("Default") };
+			List<GorillaHat> hats = new();
 			foreach (string hatFile in hatFiles)
 			{
 				try
