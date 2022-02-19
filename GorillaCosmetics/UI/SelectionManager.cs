@@ -196,6 +196,15 @@ namespace GorillaCosmetics.UI
 					mirror = GameObject.Find("Level/forest/lower level/mirror (1)");
 				}
 
+				if (mirror != null)
+				{
+					var colliders = mirror.GetComponentsInChildren<Collider>();
+					foreach (var collider in colliders)
+					{
+						collider.enabled = false;
+					}
+				}
+
 				mirror?.SetActive(true);
 			} catch (Exception e)
 			{
