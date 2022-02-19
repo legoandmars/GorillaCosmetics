@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-namespace GorillaCosmetics.Data.Descriptors
+namespace GorillaCosmetics.Data
 {
-    public class GorillaMaterialDescriptor : MonoBehaviour
+    public class CosmeticDescriptor
     {
-        public string MaterialName = "Material";
+        public string Name = "Cosmetic";
         public string AuthorName = "Author";
         public string Description = string.Empty;
         public bool CustomColors = false;

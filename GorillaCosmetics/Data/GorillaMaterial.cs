@@ -1,21 +1,16 @@
-﻿using GorillaCosmetics.Data.Descriptors;
-using System;
+﻿using System;
 using UnityEngine;
-using System.IO.Compression;
-using System.IO;
-using System.Linq;
-using System.Text;
 using GorillaCosmetics.Utils;
 
 namespace GorillaCosmetics.Data
 {
-    public class GorillaMaterial
+    public class GorillaMaterial : IAsset
     {
         public string FileName { get; }
         public AssetBundle AssetBundle { get; }
-        public GorillaMaterialDescriptor Descriptor { get; }
+        public CosmeticDescriptor Descriptor { get; }
 
-        public Material Material;
+        Material material;
 
         public GorillaMaterial(string path)
         {
@@ -31,10 +26,10 @@ namespace GorillaCosmetics.Data
 
                     // get material object and stuff
                     GameObject materialObject = AssetBundle.LoadAsset<GameObject>("_Material");
-                    Material = materialObject.GetComponent<Renderer>().material;
+                    material = materialObject.GetComponent<Renderer>().material;
 
                     // Make Descriptor
-                    Descriptor = PackageUtils.ConvertJsonToMaterial(json);
+                    Descriptor = PackageUtils.ConvertJsonToDescriptor(json);
                 }
                 catch (Exception err)
                 {
@@ -46,11 +41,28 @@ namespace GorillaCosmetics.Data
             else
             {
                 // try to load the default material
-                Descriptor = new GorillaMaterialDescriptor();
-                Descriptor.MaterialName = "Default";
+                Descriptor = new CosmeticDescriptor();
+                Descriptor.Name = "Default";
                 Descriptor.CustomColors = true;
-                Material = Resources.Load<Material>("objects/treeroom/materials/lightfur");
+                material = Resources.Load<Material>("objects/treeroom/materials/lightfur");
             }
         }
+
+        public Material GetMaterial()
+		{
+            return UnityEngine.Object.Instantiate(material);
+		}
+
+        public GameObject GetPreviewOrb(Transform parent)
+		{
+            GameObject gameObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            gameObject.layer = 18;
+            gameObject.transform.SetParent(parent);
+            gameObject.transform.localPosition = Constants.PreviewOrbLocalPosition;
+            gameObject.transform.rotation = Constants.PreviewOrbRotation;
+            gameObject.transform.localScale = Constants.PreviewOrbLocalScale;
+			gameObject.GetComponent<Renderer>().material = material;
+            return gameObject;
+		}
     }
 }

@@ -5,7 +5,6 @@ using UnityEngine;
 using System.IO.Compression;
 using System.IO;
 using System.Linq;
-using GorillaCosmetics.Data.Descriptors;
 using GorillaCosmetics.Data;
 using Newtonsoft.Json;
 
@@ -46,21 +45,10 @@ namespace GorillaCosmetics.Utils
             return AssetBundleAndJSONFromPackage(path).bundle;
         }
 
-        public static GorillaMaterialDescriptor ConvertJsonToMaterial(PackageJSON json)
+        public static CosmeticDescriptor ConvertJsonToDescriptor(PackageJSON json)
         {
-            GorillaMaterialDescriptor Descriptor = new GorillaMaterialDescriptor();
-            Descriptor.MaterialName = json.descriptor.objectName;
-            Descriptor.AuthorName = json.descriptor.author;
-            Descriptor.Description = json.descriptor.description;
-            Descriptor.CustomColors = json.config.customColors;
-            Descriptor.DisablePublicLobbies = json.config.disableInPublicLobbies;
-            return Descriptor;
-        }
-        
-        public static HatDescriptor ConvertJsonToHat(PackageJSON json)
-        {
-            HatDescriptor Descriptor = new HatDescriptor();
-            Descriptor.HatName = json.descriptor.objectName;
+            CosmeticDescriptor Descriptor = new();
+            Descriptor.Name = json.descriptor.objectName;
             Descriptor.AuthorName = json.descriptor.author;
             Descriptor.Description = json.descriptor.description;
             Descriptor.CustomColors = json.config.customColors;
