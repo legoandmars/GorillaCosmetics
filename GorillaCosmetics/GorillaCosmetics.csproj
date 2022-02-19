@@ -66,9 +66,6 @@
     <Reference Include="PhotonVoice.PUN">
       <HintPath>$(GameAssemblyPath)\PhotonVoice.PUN.dll</HintPath>
     </Reference>
-    <Reference Include="PhotonWebSocket">
-      <HintPath>$(GameAssemblyPath)\PhotonWebSocket.dll</HintPath>
-    </Reference>
     <Reference Include="PlayFab">
       <HintPath>$(GameAssemblyPath)\PlayFab.dll</HintPath>
     </Reference>

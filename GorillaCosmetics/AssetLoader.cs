@@ -89,7 +89,7 @@ namespace GorillaCosmetics
 				{
 					materials.Add(new GorillaMaterial(materialFile));
 				}
-				catch (Exception ex)
+				catch
 				{
 					File.Move(materialFile, $"{materialFile}.broken");
 					Debug.LogWarning($"Removed broken cosmetic: {materialFile}");
@@ -107,7 +107,7 @@ namespace GorillaCosmetics
 				{
 					hats.Add(new GorillaHat(hatFile));
 				}
-				catch (Exception ex)
+				catch
 				{
 					File.Move(hatFile, $"{hatFile}.broken");
 					Debug.LogWarning($"Removed broken cosmetic: {hatFile}");
