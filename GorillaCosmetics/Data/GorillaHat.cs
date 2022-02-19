@@ -70,6 +70,7 @@ namespace GorillaCosmetics.Data
             DestroyComponent<Light>();
             DestroyComponent<Camera>();
             DestroyComponent<AudioSource>();
+            DestroyComponent<ParticleSystem>();
 
             return gameObject;
 		}
