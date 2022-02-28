@@ -10,6 +10,8 @@ namespace GorillaCosmetics
 {
 	public class CustomCosmeticsController : MonoBehaviour, ICustomCosmeticsController
 	{
+		public int MatIndex { get; private set; }
+
 		public GorillaHat CurrentHat { get; private set; }
 
 		public GorillaMaterial CurrentMaterial { get; private set; }
@@ -24,6 +26,7 @@ namespace GorillaCosmetics
 		{
 			rig = GetComponent<VRRig>();
 			defaultMaterial = rig.mainSkin.material;
+			MatIndex = rig.materialsToChangeTo.Length - 1;
 
 			Player player = rig.photonView?.Owner;
 			if (player != null)
@@ -96,18 +99,29 @@ namespace GorillaCosmetics
 			CurrentMaterial = null;
 		}
 
-		public void SetColor(float red, float blue, float green)
+		public void SetColor(float red, float green, float blue)
 		{
-			Plugin.Log($"Player: {NickName} changing color to {red}, {blue}, {green}");
-			defaultMaterial.color = new Color(red, blue, green);
+			Plugin.Log($"Player: {NickName} changing color to {red}, {green}, {blue}");
+
+			Color newColor = new Color(red, green, blue);
+			defaultMaterial.color = newColor;
+
+			if (CurrentMaterial != null) 
+			{
+				Material myMat = CurrentMaterial.GetMaterial();
+				if(myMat != null && myMat.HasProperty("_Color")) 
+				{
+					myMat.color = newColor;
+				}		
+			}
 		}
 
 		void SetVRRigMaterial(Material material)
 		{
-			rig.materialsToChangeTo[0] = material;
-			if (rig.currentMatIndex == 0)
+			rig.materialsToChangeTo[MatIndex] = material;
+			if (rig.currentMatIndex == MatIndex)
 			{
-				rig.ChangeMaterialLocal(0);
+				rig.ChangeMaterialLocal(MatIndex);
 			}
 
 			rig.InitializeNoobMaterialLocal(defaultMaterial.color.r, defaultMaterial.color.g, defaultMaterial.color.b);

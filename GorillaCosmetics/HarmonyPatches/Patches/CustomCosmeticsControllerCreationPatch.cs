@@ -15,6 +15,16 @@ namespace GorillaCosmetics.HarmonyPatches.Patches
 			Photon.Realtime.Player player = __instance.photonView?.Owner;
 
 			Plugin.Log($"GorillaCosmetics: Creating CustomCosmeticsController for {player?.NickName ?? "SELF"}");
+
+			var tempMatArray = __instance.materialsToChangeTo;
+			__instance.materialsToChangeTo = new Material[tempMatArray.Length + 1];
+
+			for (int index = 0; index < tempMatArray.Length; index++) {
+				__instance.materialsToChangeTo[index] = tempMatArray[index];
+			}
+
+			__instance.materialsToChangeTo[__instance.materialsToChangeTo.Length - 1] = tempMatArray[0];
+
 			__instance.gameObject.AddComponent<CustomCosmeticsController>();
 		}
 	}

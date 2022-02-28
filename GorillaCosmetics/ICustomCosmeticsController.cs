@@ -7,6 +7,7 @@ namespace GorillaCosmetics
 {
 	public interface ICustomCosmeticsController
 	{
+		int MatIndex { get; }
 		GorillaHat CurrentHat { get; }
 		GorillaMaterial CurrentMaterial { get;  }
 
@@ -14,6 +15,6 @@ namespace GorillaCosmetics
 		void ResetHat();
 		void SetMaterial(GorillaMaterial material);
 		void ResetMaterial();
-		void SetColor(float red, float blue, float green);
+		void SetColor(float red, float green, float blue);
 	}
 }
