@@ -120,7 +120,7 @@ namespace GorillaCosmetics
 		{
 			rig.materialsToChangeTo[MatIndex] = material;
 
-			if (rig.currentMatIndex == MatIndex || rig.currentMatIndex == 0)
+			if (rig.currentMatIndex == 0)
 			{
 				rig.ChangeMaterialLocal(MatIndex);
 			}
