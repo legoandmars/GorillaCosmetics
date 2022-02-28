@@ -123,7 +123,7 @@ namespace GorillaCosmetics
 
 			if (rig.currentMatIndex == 0)
 			{
-				rig.ChangeMaterialLocal(MatIndex);
+				rig.ChangeMaterialLocal(0);
 			}
 
 			rig.InitializeNoobMaterialLocal(defaultMaterial.color.r, defaultMaterial.color.g, defaultMaterial.color.b);
