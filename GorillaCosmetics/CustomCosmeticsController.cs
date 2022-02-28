@@ -18,6 +18,7 @@ namespace GorillaCosmetics
 
 		GameObject currentHatObject;
 		Material defaultMaterial;
+		Material customMaterial;
 
 		VRRig rig;
 		string NickName => rig.photonView?.Owner?.NickName ?? "SELF";
@@ -108,8 +109,8 @@ namespace GorillaCosmetics
 
 			if (CurrentMaterial != null) 
 			{
-				Material myMat = CurrentMaterial.GetMaterial();
-				if(myMat != null && myMat.HasProperty("_Color")) 
+				Material myMat = rig.materialsToChangeTo[MatIndex];
+				if(myMat != null && (CurrentMaterial.Descriptor.CustomColors || myMat.HasProperty("_Color"))) 
 				{
 					myMat.color = newColor;
 				}		
