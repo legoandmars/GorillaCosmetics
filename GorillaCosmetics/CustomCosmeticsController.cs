@@ -119,7 +119,8 @@ namespace GorillaCosmetics
 		void SetVRRigMaterial(Material material)
 		{
 			rig.materialsToChangeTo[MatIndex] = material;
-			if (rig.currentMatIndex == MatIndex)
+
+			if (rig.currentMatIndex == MatIndex || rig.currentMatIndex == 0)
 			{
 				rig.ChangeMaterialLocal(MatIndex);
 			}
