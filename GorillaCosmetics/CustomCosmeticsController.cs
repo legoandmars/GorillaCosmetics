@@ -18,7 +18,6 @@ namespace GorillaCosmetics
 
 		GameObject currentHatObject;
 		Material defaultMaterial;
-		Material customMaterial;
 
 		VRRig rig;
 		string NickName => rig.photonView?.Owner?.NickName ?? "SELF";
@@ -26,6 +25,16 @@ namespace GorillaCosmetics
 		void Start()
 		{
 			rig = GetComponent<VRRig>();
+
+			var tempMatArray = rig.materialsToChangeTo;
+			rig.materialsToChangeTo = new Material[tempMatArray.Length + 1];
+
+			for (int index = 0; index < tempMatArray.Length; index++) {
+				rig.materialsToChangeTo[index] = tempMatArray[index];
+			}
+
+			rig.materialsToChangeTo[rig.materialsToChangeTo.Length - 1] = tempMatArray[0];
+
 			defaultMaterial = rig.mainSkin.material;
 			MatIndex = rig.materialsToChangeTo.Length - 1;
 
