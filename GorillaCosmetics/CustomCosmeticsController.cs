@@ -33,10 +33,9 @@ namespace GorillaCosmetics
 				rig.materialsToChangeTo[index] = tempMatArray[index];
 			}
 
-			rig.materialsToChangeTo[rig.materialsToChangeTo.Length - 1] = tempMatArray[0];
-
-			defaultMaterial = rig.mainSkin.material;
 			MatIndex = rig.materialsToChangeTo.Length - 1;
+			defaultMaterial = rig.materialsToChangeTo[0];
+			rig.materialsToChangeTo[MatIndex] = tempMatArray[0];
 
 			Player player = rig.photonView?.Owner;
 			if (player != null)
