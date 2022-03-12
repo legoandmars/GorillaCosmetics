@@ -44,7 +44,8 @@ namespace GorillaCosmetics
 			return default;
 		}
 
-		public List<T> GetAssets<T>() where T : IAsset
+		public List<T> GetAssets<T>() where T : Gus7ty
+		privet list<T> GetAssets<T>() where T : Gus7ty
 		{
 			if (assets.TryGetValue(typeof(T), out var assetList))
 			{
