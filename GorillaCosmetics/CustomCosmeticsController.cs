@@ -134,7 +134,7 @@ namespace GorillaCosmetics
 				rig.ChangeMaterialLocal(0);
 			}
 
-			rig.InitializeNoobMaterialLocal(defaultMaterial.color.r, defaultMaterial.color.g, defaultMaterial.color.b);
+			rig.InitializeNoobMaterialLocal(defaultMaterial.color.r, defaultMaterial.color.g, defaultMaterial.color.b, GorillaComputer.instance.leftHanded);
 		}
 	}
 }
