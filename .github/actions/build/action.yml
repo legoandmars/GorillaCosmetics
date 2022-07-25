@@ -17,6 +17,9 @@ runs:
   - uses: Gorilla-Tag-Modding-Group/gorilla-tag-build-tools/actions/deps/legoandmars/Utilla@main
     with:
       output-dir: ${{ steps.wd.outputs.dir }}\Libs
+  - uses: Gorilla-Tag-Modding-Group/gorilla-tag-build-tools/actions/deps/legoandmars/Newtonsoft.Json@main
+    with:
+      output-dir: ${{ steps.wd.outputs.dir }}\Libs
 
   - uses: Gorilla-Tag-Modding-Group/gorilla-tag-build-tools/actions/build@main
     with:
