@@ -1,0 +1,23 @@
+# Composite action for building mod
+
+name: Build
+description: Builds mod
+
+runs:
+  using: "composite"
+  steps:
+  - name: Get working directory
+    id: wd
+    uses: Gorilla-Tag-Modding-Group/gorilla-tag-build-tools/actions/working-dir@main
+
+  - uses: Gorilla-Tag-Modding-Group/gorilla-tag-build-tools/actions/setup@main
+    with:
+      working-dir: ${{ steps.wd.outputs.dir }}
+
+  - uses: Gorilla-Tag-Modding-Group/gorilla-tag-build-tools/actions/deps/legoandmars/Utilla@main
+    with:
+      output-dir: ${{ steps.wd.outputs.dir }}\Libs
+
+  - uses: Gorilla-Tag-Modding-Group/gorilla-tag-build-tools/actions/build@main
+    with:
+      working-dir: ${{ steps.wd.outputs.dir }}

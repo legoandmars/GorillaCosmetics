@@ -1,0 +1,26 @@
+# Creates a release from a template
+
+name: Make Release
+on: 
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+
+jobs:
+  release:    
+    name: Make Release
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Build mod
+      uses: ./.github/actions/build
+
+    - name: Make Release
+      uses: Gorilla-Tag-Modding-Group/gorilla-tag-build-tools/actions/release@main
+      with:
+        tag: ${{ inputs.tag }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        human-name: Gorilla Cosmetics
+
