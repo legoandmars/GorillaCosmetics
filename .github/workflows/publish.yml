@@ -9,8 +9,8 @@ jobs:
   publish-release:
     name: Publish Release
     runs-on: ubuntu-latest
-    environment: delay # has to be created in the repository
     steps:
+    - run: sleep 2h
     - name: Publish mod
       uses: Gorilla-Tag-Modding-Group/gorilla-tag-build-tools/actions/publish@main
       with:
