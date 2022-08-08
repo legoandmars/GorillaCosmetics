@@ -32,7 +32,10 @@ namespace GorillaCosmetics.UI
 			wardrobeItemButton.enabled = true;
 			foreach (Transform child in wardrobeItemButton.controlledModel.transform)
 			{
-				child.gameObject.SetActive(true);
+				if (!child.name.ToLower().Contains("coming soon"))
+				{
+					child.gameObject.SetActive(true);
+				}
 			}
 		}
 

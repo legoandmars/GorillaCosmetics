@@ -41,6 +41,7 @@ namespace GorillaCosmetics.UI
 		List<PageButton> pageButtons = new();
 		List<ViewButton> viewButtons = new();
 		WardrobeFunctionButton badgeButton;
+		WardrobeFunctionButton holdableButton;
 
 		GameObject previewHat;
 		GameObject previewOrb;
@@ -102,14 +103,21 @@ namespace GorillaCosmetics.UI
 			cube.SetActive(false);
 			MeshFilter meshFilter = cube.GetComponent<MeshFilter>();
 
-			GameObject button = GameObject.Instantiate(template);
+			GameObject button = GameObject.Instantiate(template, template.transform.parent);
 			button.name = "ToggleEnableButton";
 			button.GetComponent<MeshFilter>().mesh = meshFilter.mesh;
 			button.GetComponent<Renderer>().material = Resources.Load<Material>("objects/treeroom/materials/plastic");
-			button.transform.parent = template.transform.parent;
 			button.transform.localPosition = template.transform.localPosition + Constants.EnableButtonLocalPositionOffset;
 			button.transform.localRotation = template.transform.localRotation;
 			button.transform.localScale = template.transform.localScale;
+
+			WardrobeFunctionButton hatFunctionButton = button.GetComponent<WardrobeFunctionButton>();
+			var templateText = hatFunctionButton.myText;
+			var newText = GameObject.Instantiate(templateText, templateText.transform.parent);
+			newText.transform.localPosition = templateText.transform.localPosition + Constants.EnableButtonLocalPositionOffset;
+			newText.transform.localRotation = templateText.transform.localRotation;
+			newText.transform.localScale = templateText.transform.localScale;
+			hatFunctionButton.myText = newText;
 
 			button.AddComponent<ToggleEnableButton>();
 
@@ -138,8 +146,11 @@ namespace GorillaCosmetics.UI
 				GameObject.Destroy(viewButton);
 			}
 			viewButtons = new();
+
 			badgeButton.enabled = true;
 			badgeButton.myText.enabled = true;
+			holdableButton.enabled = true;
+			holdableButton.myText.enabled = true;
 
 			mirror?.SetActive(false);
 
@@ -182,6 +193,11 @@ namespace GorillaCosmetics.UI
 						badgeButton = transform.GetComponent<WardrobeFunctionButton>();
 						badgeButton.enabled = false;
 						badgeButton.myText.enabled = false;
+					} else if (lowerName.Contains("holdable"))
+					{
+						holdableButton = transform.GetComponent<WardrobeFunctionButton>();
+						holdableButton.enabled = false;
+						holdableButton.myText.enabled = false;
 					}
 				}
 			} catch (Exception e)
