@@ -1,0 +1,28 @@
+# Creates a build every commit
+
+name: Auto Build
+on: 
+  push:
+    branches: [master,main]
+    paths-ignore:
+      - '**.yml'
+      - '!.github/workflows/build.yml'
+      - '**.md'
+      - '.gitignore'
+  pull_request:
+    branches: [master,main]
+
+jobs:
+  auto-build:
+    name: Auto Build
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Build mod
+      uses: ./.github/actions/build
+
+    - name: Upload mod
+      uses: Gorilla-Tag-Modding-Group/gorilla-tag-build-tools/actions/upload@main
+      with:
+        webhook-url: ${{ secrets.WEBHOOK_URL }}

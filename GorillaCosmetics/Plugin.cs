@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace GorillaCosmetics
 {
-    [BepInPlugin("org.legoandmars.gorillatag.gorillacosmetics", "Gorilla Cosmetics", "3.0.1")]
+    [BepInPlugin("org.legoandmars.gorillatag.gorillacosmetics", "Gorilla Cosmetics", "3.0.2")]
     [BepInDependency("org.legoandmars.gorillatag.utilla", "1.5.0")]
     public class Plugin : BaseUnityPlugin
     {

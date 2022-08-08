@@ -1,0 +1,17 @@
+# Creates a release post when a release is made
+
+name: Publish Release
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish-release:
+    name: Publish Release
+    runs-on: ubuntu-latest
+    steps:
+    - run: sleep 2h
+    - name: Publish mod
+      uses: Gorilla-Tag-Modding-Group/gorilla-tag-build-tools/actions/publish@main
+      with:
+        webhook-url: ${{ secrets.PUBLISH_WEBHOOK_URL }}
