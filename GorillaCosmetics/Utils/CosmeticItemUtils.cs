@@ -9,8 +9,8 @@ namespace GorillaCosmetics.Utils
 		public static bool ContainsHat(CosmeticsController.CosmeticItem cosmeticItem)
 		{
 			return Plugin.SelectionManager.CurrentHat != null &&
-				(cosmeticItem.itemSlot == "hat" ||
-				(cosmeticItem.itemSlot == "set" && cosmeticItem.bundledItems.Any(id => CosmeticsController.instance.GetItemFromDict(id).itemSlot == "hat")));
+				(cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Hat ||
+				(cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Set && cosmeticItem.bundledItems.Any(id => CosmeticsController.instance.GetItemFromDict(id).itemCategory == CosmeticsController.CosmeticCategory.Set)));
 		}
 	}
 }

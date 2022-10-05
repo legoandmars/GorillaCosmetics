@@ -415,12 +415,25 @@ namespace GorillaCosmetics.UI
 
 		void ResetGameHat()
 		{
-			if (CosmeticsController.instance.currentWornSet.hat.itemName != CosmeticsController.instance.nullItem.itemName)
+			if (CosmeticsController.instance.currentWornSet.items[0].itemCategory == CosmeticsController.CosmeticCategory.Hat)
 			{
+				if (CosmeticsController.instance.currentWornSet.items[0].itemName != CosmeticsController.instance.nullItem.itemName)
+				{
+                    CosmeticsController.instance.currentWornSet.items[0] = CosmeticsController.instance.nullItem;
+
+					if (CosmeticsController.instance.tryOnSet.items[0].itemCategory == CosmeticsController.CosmeticCategory.Hat)
+                        CosmeticsController.instance.tryOnSet.items[0] = CosmeticsController.instance.nullItem;
+
+                    CosmeticsController.instance.UpdateShoppingCart();
+                }
+
+            }
+            /*if (CosmeticsController.instance.currentWornSet.hat.itemName != CosmeticsController.instance.nullItem.itemName)
+            {
 				CosmeticsController.instance.currentWornSet.hat = CosmeticsController.instance.nullItem;
 				CosmeticsController.instance.tryOnSet.hat = CosmeticsController.instance.nullItem;
 				CosmeticsController.instance.UpdateShoppingCart();
-			}
-		}
+			}*/
+        }
 	}
 }
