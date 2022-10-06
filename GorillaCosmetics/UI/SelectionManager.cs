@@ -415,25 +415,42 @@ namespace GorillaCosmetics.UI
 
 		void ResetGameHat()
 		{
-			if (CosmeticsController.instance.currentWornSet.items[0].itemCategory == CosmeticsController.CosmeticCategory.Hat)
+			try
 			{
-				if (CosmeticsController.instance.currentWornSet.items[0].itemName != CosmeticsController.instance.nullItem.itemName)
+				bool updateCart = false;
+
+				var nullItem = CosmeticsController.instance.nullItem;
+
+				var items = CosmeticsController.instance.currentWornSet.items;
+				for (int i = 0; i < items.Length; i++)
 				{
-                    CosmeticsController.instance.currentWornSet.items[0] = CosmeticsController.instance.nullItem;
+					if (items[i].itemCategory == CosmeticsController.CosmeticCategory.Hat)
+					{
+						updateCart = true;
+						items[i] = nullItem;
+					}
+				}
 
-					if (CosmeticsController.instance.tryOnSet.items[0].itemCategory == CosmeticsController.CosmeticCategory.Hat)
-                        CosmeticsController.instance.tryOnSet.items[0] = CosmeticsController.instance.nullItem;
-
-                    CosmeticsController.instance.UpdateShoppingCart();
-                }
-
-            }
-            /*if (CosmeticsController.instance.currentWornSet.hat.itemName != CosmeticsController.instance.nullItem.itemName)
-            {
-				CosmeticsController.instance.currentWornSet.hat = CosmeticsController.instance.nullItem;
-				CosmeticsController.instance.tryOnSet.hat = CosmeticsController.instance.nullItem;
-				CosmeticsController.instance.UpdateShoppingCart();
-			}*/
+				items = CosmeticsController.instance.tryOnSet.items;
+				for (int i = 0; i < items.Length; i++)
+				{
+					if (items[i].itemCategory == CosmeticsController.CosmeticCategory.Hat)
+					{
+						updateCart = true;
+						items[i] = nullItem;
+					}
+				}
+				
+				// TODO: Check if this call is necessary
+				if (updateCart)
+				{
+					CosmeticsController.instance.UpdateShoppingCart();
+				}
+			}
+			catch (Exception e)
+			{
+				Debug.LogError($"GorillaCosmetics: Failed to remove game hat: {e}");
+			}
         }
 	}
 }
