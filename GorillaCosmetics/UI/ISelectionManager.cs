@@ -26,5 +26,5 @@ namespace GorillaCosmetics.UI
 		void ResetHat();
 		void SetMaterial(GorillaMaterial material);
 		void ResetMaterial();
-	}
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using GorillaCosmetics.Data;
 using GorillaNetworking;
+using Photon.Pun;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +24,9 @@ namespace GorillaCosmetics.UI
 		ISelectionManager.SelectionView view;
 
 		ICustomCosmeticsController offlineCustomCosmeticsController;
-		ICustomCosmeticsController onlineCustomCosmeticsController => GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: ew
+	    ICustomCosmeticsController onlineCustomCosmeticsController { get; set; }
 
-		CosmeticsController.Wardrobe wardrobe;
+        CosmeticsController.Wardrobe wardrobe;
 		GameObject mirror;
 
 		List<GorillaHat> hats;
@@ -81,7 +82,7 @@ namespace GorillaCosmetics.UI
 			CreateEnableButton();
 		}
 
-		void CreateEnableButton()
+        void CreateEnableButton()
 		{
 			GameObject template = null;
 
@@ -124,7 +125,7 @@ namespace GorillaCosmetics.UI
 			GameObject.Destroy(cube);
 		}
 
-		public void Disable()
+        public void Disable()
 		{
 			foreach (var button in wardrobe.wardrobeItemButtons)
 			{
@@ -356,10 +357,16 @@ namespace GorillaCosmetics.UI
 				PlayerPrefs.Save();
 
 				CurrentHat = hat;
-				offlineCustomCosmeticsController.SetHat(hat);
-				onlineCustomCosmeticsController?.SetHat(hat);
 
-				UpdateHeadModel();
+                offlineCustomCosmeticsController.SetHat(hat);
+
+                if (PhotonNetwork.InRoom)
+                {
+                    onlineCustomCosmeticsController ??= GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: ew
+                    onlineCustomCosmeticsController?.SetHat(hat);
+                }
+
+                UpdateHeadModel();
 
 				OnCosmeticsUpdated?.Invoke();
 			}
@@ -371,10 +378,16 @@ namespace GorillaCosmetics.UI
 			PlayerPrefs.Save();
 
 			CurrentHat = null;
-			offlineCustomCosmeticsController.ResetHat();
-			onlineCustomCosmeticsController?.ResetHat();
 
-			UpdateHeadModel();
+            offlineCustomCosmeticsController.ResetHat();
+
+            if (PhotonNetwork.InRoom)
+            {
+                onlineCustomCosmeticsController ??= GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: ew
+                onlineCustomCosmeticsController?.ResetHat();
+            }
+
+            UpdateHeadModel();
 
 			OnCosmeticsUpdated?.Invoke();
 		}
@@ -390,10 +403,16 @@ namespace GorillaCosmetics.UI
 				PlayerPrefs.Save();
 
 				CurrentMaterial = material;
-				offlineCustomCosmeticsController.SetMaterial(material);
-				onlineCustomCosmeticsController?.SetMaterial(material);
 
-				UpdateHeadModel();
+                offlineCustomCosmeticsController.SetMaterial(material);
+
+                if (PhotonNetwork.InRoom)
+                {
+                    onlineCustomCosmeticsController ??= GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: ew
+                    onlineCustomCosmeticsController?.SetMaterial(material);
+                }
+
+                UpdateHeadModel();
 
 				OnCosmeticsUpdated?.Invoke();
 			}
@@ -405,10 +424,17 @@ namespace GorillaCosmetics.UI
 			PlayerPrefs.Save();
 
 			CurrentMaterial = null;
-			offlineCustomCosmeticsController.ResetMaterial();
-			onlineCustomCosmeticsController?.ResetMaterial();
 
-			UpdateHeadModel();
+            offlineCustomCosmeticsController.ResetMaterial();
+
+            if (PhotonNetwork.InRoom)
+            {
+                if (onlineCustomCosmeticsController == null)
+                    onlineCustomCosmeticsController = GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: ew
+                onlineCustomCosmeticsController?.ResetMaterial();
+            }
+
+            UpdateHeadModel();
 
 			OnCosmeticsUpdated?.Invoke();
 		}
