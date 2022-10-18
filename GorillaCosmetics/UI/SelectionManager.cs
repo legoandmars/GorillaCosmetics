@@ -467,14 +467,14 @@ namespace GorillaCosmetics.UI
 					}
 				}
 
-                PlayerPrefs.SetString(CosmeticsController.CosmeticSet.SlotPlayerPreferenceName(CosmeticsController.CosmeticSlots.Hat), nullItem.itemName);
-                PlayerPrefs.Save();
-
                 // TODO: Check if this call is necessary
                 if (updateCart)
 				{
 					CosmeticsController.instance.UpdateShoppingCart();
-				}
+
+                    PlayerPrefs.SetString(CosmeticsController.CosmeticSet.SlotPlayerPreferenceName(CosmeticsController.CosmeticSlots.Hat), nullItem.itemName);
+                    PlayerPrefs.Save();
+                }
 			}
 			catch (Exception e)
 			{
