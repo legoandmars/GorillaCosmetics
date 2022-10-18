@@ -24,7 +24,7 @@ namespace GorillaCosmetics.UI
 		ISelectionManager.SelectionView view;
 
 		ICustomCosmeticsController offlineCustomCosmeticsController;
-	    ICustomCosmeticsController onlineCustomCosmeticsController { get; set; }
+		ICustomCosmeticsController onlineCustomCosmeticsController { get; set; }
 
         CosmeticsController.Wardrobe wardrobe;
 		GameObject mirror;
@@ -430,7 +430,7 @@ namespace GorillaCosmetics.UI
             if (PhotonNetwork.InRoom)
             {
                 if (onlineCustomCosmeticsController == null)
-                    onlineCustomCosmeticsController = GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: ew
+                    onlineCustomCosmeticsController ??= GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: ew
                 onlineCustomCosmeticsController?.ResetMaterial();
             }
 
@@ -454,7 +454,7 @@ namespace GorillaCosmetics.UI
 					{
 						updateCart = true;
 						items[i] = nullItem;
-					}
+                    }
 				}
 
 				items = CosmeticsController.instance.tryOnSet.items;
@@ -466,9 +466,12 @@ namespace GorillaCosmetics.UI
 						items[i] = nullItem;
 					}
 				}
-				
-				// TODO: Check if this call is necessary
-				if (updateCart)
+
+                PlayerPrefs.SetString(CosmeticsController.CosmeticSet.SlotPlayerPreferenceName(CosmeticsController.CosmeticSlots.Hat), nullItem.itemName);
+                PlayerPrefs.Save();
+
+                // TODO: Check if this call is necessary
+                if (updateCart)
 				{
 					CosmeticsController.instance.UpdateShoppingCart();
 				}
