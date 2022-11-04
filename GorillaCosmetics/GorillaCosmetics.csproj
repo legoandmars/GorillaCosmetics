@@ -30,9 +30,6 @@
     <Reference Include="clipper_library">
       <HintPath>$(GameAssemblyPath)\clipper_library.dll</HintPath>
     </Reference>
-    <Reference Include="MonkeMapLoader">
-      <HintPath>$(PluginsPath)\MonkeMapLoader\MonkeMapLoader.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Security">
       <HintPath>$(GameAssemblyPath)\Mono.Security.dll</HintPath>
     </Reference>

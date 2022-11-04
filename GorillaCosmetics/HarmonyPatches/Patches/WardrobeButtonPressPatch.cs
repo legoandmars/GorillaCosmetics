@@ -11,11 +11,12 @@ namespace GorillaCosmetics.HarmonyPatches.Patches
 	[HarmonyPatch("PressWardrobeItemButton", MethodType.Normal)]
 	internal class WardrobeButtonPressPatch
 	{
-		internal static void Postfix(CosmeticsController __instance, CosmeticsController.CosmeticItem cosmeticItem)
+		internal static void Postfix(CosmeticsController __instance, CosmeticsController.CosmeticItem cosmeticItem, bool isLeftHand)
 		{
 			if (CosmeticItemUtils.ContainsHat(cosmeticItem))
 			{
 				Plugin.SelectionManager.ResetHat();
+				__instance.UpdateShoppingCart();
 			}
 		}
 	}
@@ -24,12 +25,13 @@ namespace GorillaCosmetics.HarmonyPatches.Patches
 	[HarmonyPatch("PressFittingRoomButton", MethodType.Normal)]
 	internal class FittingRoomButtonPressPatch
 	{
-		internal static void Postfix(CosmeticsController __instance, FittingRoomButton pressedFittingRoomButton)
+		internal static void Postfix(CosmeticsController __instance, FittingRoomButton pressedFittingRoomButton, bool isLeftHand)
 		{
 			if (CosmeticItemUtils.ContainsHat(pressedFittingRoomButton.currentCosmeticItem))
 			{
 				Plugin.SelectionManager.ResetHat();
-			}
+                __instance.UpdateShoppingCart();
+            }
 		}
 	}
 
