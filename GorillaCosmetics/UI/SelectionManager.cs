@@ -82,12 +82,6 @@ namespace GorillaCosmetics.UI
 			CreateEnableButton();
 		}
 
-		internal void GetOnlineCosmeticController()
-		{
-			if (onlineCustomCosmeticsController == null)
-				onlineCustomCosmeticsController ??= GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: could be improved lol
-        }
-
         void CreateEnableButton()
 		{
 			GameObject template = null;
@@ -368,7 +362,7 @@ namespace GorillaCosmetics.UI
 
                 if (PhotonNetwork.InRoom)
                 {
-					GetOnlineCosmeticController();
+                    onlineCustomCosmeticsController = GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: could be improved lol
                     onlineCustomCosmeticsController?.SetHat(hat);
                 }
 
@@ -389,7 +383,7 @@ namespace GorillaCosmetics.UI
 
             if (PhotonNetwork.InRoom)
             {
-                GetOnlineCosmeticController();
+                onlineCustomCosmeticsController = GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: could be improved lol
                 onlineCustomCosmeticsController?.ResetHat();
             }
 
@@ -414,7 +408,7 @@ namespace GorillaCosmetics.UI
 
                 if (PhotonNetwork.InRoom)
                 {
-                    GetOnlineCosmeticController();
+                    onlineCustomCosmeticsController = GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: could be improved lol
                     onlineCustomCosmeticsController?.SetMaterial(material);
                 }
 
@@ -435,7 +429,7 @@ namespace GorillaCosmetics.UI
 
             if (PhotonNetwork.InRoom)
             {
-                GetOnlineCosmeticController();
+                onlineCustomCosmeticsController = GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: could be improved lol
                 onlineCustomCosmeticsController?.ResetMaterial();
             }
 
