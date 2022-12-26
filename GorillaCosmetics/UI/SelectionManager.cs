@@ -107,8 +107,8 @@ namespace GorillaCosmetics.UI
 			GameObject button = GameObject.Instantiate(template, template.transform.parent);
 			button.name = "ToggleEnableButton";
 			button.GetComponent<MeshFilter>().mesh = meshFilter.mesh;
-			button.GetComponent<Renderer>().material = Resources.Load<Material>("objects/treeroom/materials/plastic");
-			button.transform.localPosition = template.transform.localPosition + Constants.EnableButtonLocalPositionOffset;
+			button.GetComponent<Renderer>().material = (UnityEngine.Object.FindObjectOfType(typeof(WardrobeFunctionButton)) as WardrobeFunctionButton).unpressedMaterial;
+            button.transform.localPosition = template.transform.localPosition + Constants.EnableButtonLocalPositionOffset;
 			button.transform.localRotation = template.transform.localRotation;
 			button.transform.localScale = template.transform.localScale;
 
