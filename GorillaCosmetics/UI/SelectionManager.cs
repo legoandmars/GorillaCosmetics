@@ -449,7 +449,7 @@ namespace GorillaCosmetics.UI
 				var items = CosmeticsController.instance.currentWornSet.items;
 				for (int i = 0; i < items.Length; i++)
 				{
-					if (items[i].itemCategory == CosmeticsController.CosmeticCategory.Hat)
+					if (items[i].itemCategory == CosmeticsController.CosmeticCategory.Hat && !items[i].isNullItem)
 					{
 						updateCart = true;
 						items[i] = nullItem;
@@ -459,7 +459,7 @@ namespace GorillaCosmetics.UI
 				items = CosmeticsController.instance.tryOnSet.items;
 				for (int i = 0; i < items.Length; i++)
 				{
-					if (items[i].itemCategory == CosmeticsController.CosmeticCategory.Hat)
+					if (items[i].itemCategory == CosmeticsController.CosmeticCategory.Hat && !items[i].isNullItem)
 					{
 						updateCart = true;
 						items[i] = nullItem;
