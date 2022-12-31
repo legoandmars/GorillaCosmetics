@@ -210,7 +210,7 @@ namespace GorillaCosmetics.UI
 			{
 				if (mirror == null)
 				{
-					mirror = GameObject.Find("Level/forest/lower level/mirror (1)");
+					mirror = GameObject.Find("Level/lower level/mirror (1)/"); // The lower level object isn't in the forest object anymore
 				}
 
 				if (mirror != null)
@@ -220,10 +220,13 @@ namespace GorillaCosmetics.UI
 					{
 						collider.enabled = false;
 					}
-				}
+
+                    mirror.GetComponentInChildren<Camera>().cullingMask = GorillaTagger.Instance.mainCamera.GetComponent<Camera>().cullingMask;
+                }
 
 				mirror?.SetActive(true);
-			} catch (Exception e)
+
+            } catch (Exception e)
 			{
 				Debug.LogError($"GorillaCosmetics: Failed to show mirror: {e}");
 			}
