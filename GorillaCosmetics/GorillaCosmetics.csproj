@@ -34,7 +34,7 @@
       <HintPath>$(GameAssemblyPath)\Mono.Security.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>$(BepInExAssemblyPath)\Newtonsoft.Json.dll</HintPath>
+      <HintPath>$(GameAssemblyPath)\Valve.Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Oculus.Platform">
       <HintPath>$(GameAssemblyPath)\Oculus.Platform.dll</HintPath>

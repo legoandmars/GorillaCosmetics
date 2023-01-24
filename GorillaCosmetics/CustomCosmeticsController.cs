@@ -118,11 +118,8 @@ namespace GorillaCosmetics
 			if (CurrentMaterial != null) 
 			{
 				Material myMat = rig.materialsToChangeTo[MatIndex];
-				if(myMat != null && (CurrentMaterial.Descriptor.CustomColors || myMat.HasProperty("_Color"))) 
-				{
-					myMat.color = newColor;
-				}		
-			}
+				if (myMat != null && CurrentMaterial.Descriptor.CustomColors && myMat.HasProperty("_Color")) myMat.color = newColor;
+            }
 		}
 
 		void SetVRRigMaterial(Material material)

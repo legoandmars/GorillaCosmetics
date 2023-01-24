@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using UnityEngine;
 using System.IO.Compression;
 using System.IO;
 using System.Linq;
 using GorillaCosmetics.Data;
-using Newtonsoft.Json;
+using Valve.Newtonsoft.Json;
 
 namespace GorillaCosmetics.Utils
 {
