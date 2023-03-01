@@ -50,9 +50,8 @@ namespace GorillaCosmetics
 
 				var customCosmeticsControllerObject = GorillaGameManager.instance.FindVRRigForPlayer(targetPlayer);
 				var customCosmeticsController = customCosmeticsControllerObject.GetComponent<ICustomCosmeticsController>();
-				var customProps = targetPlayer.CustomProperties;
 
-				if (customProps.TryGetValue(CustomHatKey, out var hatObj))
+				if (changedProps.TryGetValue(CustomHatKey, out var hatObj))
 				{
 					if (hatObj is string hatName)
 					{
@@ -74,7 +73,7 @@ namespace GorillaCosmetics
 
 				}
 
-				if (customProps.TryGetValue(CustomMaterialKey, out var matObj))
+				if (changedProps.TryGetValue(CustomMaterialKey, out var matObj))
 				{
 					if (matObj is string matName)
 					{
