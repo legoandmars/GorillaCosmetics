@@ -30,7 +30,8 @@ namespace GorillaCosmetics.UI
 			myText = wardrobeFunctionButton.myText;
 
 			defaultText = myText.text;
-		}
+            onPressButton = new UnityEngine.Events.UnityEvent();
+        }
 
 		public void OnDestroy()
 		{

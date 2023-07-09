@@ -23,7 +23,8 @@ namespace GorillaCosmetics.UI
 			offText = "CUSTOM";
 			onText = "CUSTOM";
 			myText.text = "CUSTOM";
-		}
+			onPressButton = new UnityEngine.Events.UnityEvent();
+        }
 
 		public void Update()
 		{

@@ -1,5 +1,7 @@
 ﻿using GorillaCosmetics.Data;
 using GorillaNetworking;
+using HarmonyLib;
+using Photon.Pun;
 using Photon.Realtime;
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ using UnityEngine;
 
 namespace GorillaCosmetics
 {
-	public class CustomCosmeticsController : MonoBehaviour, ICustomCosmeticsController
+	public class CustomCosmeticsController : MonoBehaviourPunCallbacks, ICustomCosmeticsController
 	{
 		public int MatIndex { get; private set; }
 
@@ -20,9 +22,9 @@ namespace GorillaCosmetics
 		Material defaultMaterial;
 
 		VRRig rig;
-		string NickName => rig.photonView?.Owner?.NickName ?? "SELF";
+		Player currentPlayer;
 
-		void Start()
+        void Start()
 		{
 			rig = GetComponent<VRRig>();
 
@@ -37,10 +39,10 @@ namespace GorillaCosmetics
 			defaultMaterial = rig.materialsToChangeTo[0];
 			rig.materialsToChangeTo[MatIndex] = tempMatArray[0];
 
-			Player player = rig.photonView?.Owner;
-			if (player != null)
+            currentPlayer = Traverse.Create(rig).Field("creator").GetValue() as Player;
+            if (currentPlayer != null)
 			{
-				Plugin.CosmeticsNetworker.OnPlayerPropertiesUpdate(player, player.CustomProperties);
+				Plugin.CosmeticsNetworker.OnPlayerPropertiesUpdate(currentPlayer, currentPlayer.CustomProperties);
 			}
 		}
 
@@ -52,7 +54,7 @@ namespace GorillaCosmetics
 				return;
 			}
 
-			Plugin.Log($"Player: {NickName} switching hat from {CurrentHat?.Descriptor?.Name} to {hat?.Descriptor?.Name}");
+			Plugin.Log($"Player: {rig.playerText.text} switching hat from {CurrentHat?.Descriptor?.Name} to {hat?.Descriptor?.Name}");
 			CurrentHat = hat;
 
 			if (currentHatObject != null)
@@ -71,7 +73,7 @@ namespace GorillaCosmetics
 
 		public void ResetHat()
 		{
-			Plugin.Log($"Player: {NickName} resetting hat");
+			Plugin.Log($"Player: {rig.playerText.text} resetting hat");
 
 			if (currentHatObject != null)
 			{
@@ -90,7 +92,7 @@ namespace GorillaCosmetics
 				return;
 			}
 
-			Plugin.Log($"Player: {NickName} switching material from {CurrentMaterial?.Descriptor?.Name} to {material?.Descriptor?.Name}");
+			Plugin.Log($"Player: {rig.playerText.text} switching material from {CurrentMaterial?.Descriptor?.Name} to {material?.Descriptor?.Name}");
 
 			CurrentMaterial = material;
 			SetVRRigMaterial(material.GetMaterial());
@@ -98,7 +100,7 @@ namespace GorillaCosmetics
 
 		public void ResetMaterial()
 		{
-			Plugin.Log($"Player: {NickName} resetting material");
+			Plugin.Log($"Player: {rig.playerText.text} resetting material");
 
 			if (defaultMaterial != null)
 			{
@@ -110,7 +112,8 @@ namespace GorillaCosmetics
 
 		public void SetColor(float red, float green, float blue)
 		{
-			Plugin.Log($"Player: {NickName} changing color to {red}, {green}, {blue}");
+			if (rig == null) return;
+			Plugin.Log($"Player: {rig.playerText.text} changing color to {red}, {green}, {blue}");
 
 			Color newColor = new Color(red, green, blue);
 			defaultMaterial.color = newColor;
@@ -133,5 +136,27 @@ namespace GorillaCosmetics
 
 			rig.InitializeNoobMaterialLocal(defaultMaterial.color.r, defaultMaterial.color.g, defaultMaterial.color.b, GorillaComputer.instance.leftHanded);
 		}
-	}
+
+        public override void OnLeftRoom()
+        {
+            base.OnLeftRoom();
+
+			if (currentPlayer != null && !currentPlayer.IsLocal)
+			{
+                ResetHat();
+                ResetMaterial();
+			}
+        }
+
+        public override void OnPlayerLeftRoom(Player otherPlayer)
+        {
+            base.OnPlayerLeftRoom(otherPlayer);
+
+			if (otherPlayer == currentPlayer)
+			{
+                ResetHat();
+                ResetMaterial();
+            }
+        }
+    }
 }

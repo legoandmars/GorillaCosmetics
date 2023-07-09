@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace GorillaCosmetics.UI
@@ -53,34 +54,42 @@ namespace GorillaCosmetics.UI
 		public SelectionManager()
 		{
 			offlineCustomCosmeticsController = GorillaTagger.Instance.offlineVRRig.GetComponent<ICustomCosmeticsController>();
-			hats = Plugin.AssetLoader.GetAssets<GorillaHat>();
+            offlineCustomCosmeticsController ??= GorillaTagger.Instance.offlineVRRig.gameObject.AddComponent<CustomCosmeticsController>();
+
+            hats = Plugin.AssetLoader.GetAssets<GorillaHat>();
 			materials = Plugin.AssetLoader.GetAssets<GorillaMaterial>();
 
 			wardrobe = CosmeticsController.instance.wardrobes[1];
 
-			var hatString = PlayerPrefs.GetString(HatPlayerPrefKey, "NOTHING");
-			var matString = PlayerPrefs.GetString(MaterialPlayerPrefKey, "NOTHING");
+            CreateEnableButton();
+            RestorePrefItems(); // "Restore" them after we've created the button
+        }
 
-			if (hatString.StartsWith(PlayerPrefsPrefix))
-			{
-				var hat = Plugin.AssetLoader.GetAsset<GorillaHat>(hatString.Substring(PlayerPrefsPrefix.Length));
-				if (hat != null)
-				{
-					SetHat(hat);
-				}
-			}
+		async void RestorePrefItems()
+		{
+            await Task.Delay(400);
 
-			if (matString.StartsWith(PlayerPrefsPrefix))
-			{
-				var mat = Plugin.AssetLoader.GetAsset<GorillaMaterial>(matString.Substring(PlayerPrefsPrefix.Length));
-				if (mat != null)
-				{
-					SetMaterial(mat);
-				}
-			}
+            var hatString = PlayerPrefs.GetString(HatPlayerPrefKey, "NOTHING");
+            var matString = PlayerPrefs.GetString(MaterialPlayerPrefKey, "NOTHING");
 
-			CreateEnableButton();
-		}
+            if (hatString.StartsWith(PlayerPrefsPrefix))
+            {
+                var hat = Plugin.AssetLoader.GetAsset<GorillaHat>(hatString.Substring(PlayerPrefsPrefix.Length));
+                if (hat != null)
+                {
+                    SetHat(hat);
+                }
+            }
+
+            if (matString.StartsWith(PlayerPrefsPrefix))
+            {
+                var mat = Plugin.AssetLoader.GetAsset<GorillaMaterial>(matString.Substring(PlayerPrefsPrefix.Length));
+                if (mat != null)
+                {
+                    SetMaterial(mat);
+                }
+            }
+        }
 
         void CreateEnableButton()
 		{
@@ -107,13 +116,13 @@ namespace GorillaCosmetics.UI
 			GameObject button = GameObject.Instantiate(template, template.transform.parent);
 			button.name = "ToggleEnableButton";
 			button.GetComponent<MeshFilter>().mesh = meshFilter.mesh;
-			button.GetComponent<Renderer>().material = (UnityEngine.Object.FindObjectOfType(typeof(WardrobeFunctionButton)) as WardrobeFunctionButton).unpressedMaterial;
             button.transform.localPosition = template.transform.localPosition + Constants.EnableButtonLocalPositionOffset;
 			button.transform.localRotation = template.transform.localRotation;
 			button.transform.localScale = template.transform.localScale;
 
 			WardrobeFunctionButton hatFunctionButton = button.GetComponent<WardrobeFunctionButton>();
-			var templateText = hatFunctionButton.myText;
+			button.GetComponent<Renderer>().material = hatFunctionButton.unpressedMaterial;
+            var templateText = hatFunctionButton.myText;
 			var newText = GameObject.Instantiate(templateText, templateText.transform.parent);
 			newText.transform.localPosition = templateText.transform.localPosition + Constants.EnableButtonLocalPositionOffset;
 			newText.transform.localRotation = templateText.transform.localRotation;
@@ -173,11 +182,13 @@ namespace GorillaCosmetics.UI
 					{
 						var pageButton = transform.gameObject.AddComponent<PageButton>();
 						pageButton.Forward = false;
+						pageButton.onPressButton = new UnityEngine.Events.UnityEvent();
 						pageButtons.Add(pageButton);
 					} else if (lowerName.Contains("right"))
 					{
 						var pageButton = transform.gameObject.AddComponent<PageButton>();
-						pageButton.Forward = true;
+                        pageButton.onPressButton = new UnityEngine.Events.UnityEvent();
+                        pageButton.Forward = true;
 						pageButtons.Add(pageButton);
 					} else if (lowerName.Contains("hat"))
 					{
@@ -361,7 +372,7 @@ namespace GorillaCosmetics.UI
 
 				CurrentHat = hat;
 
-                offlineCustomCosmeticsController.SetHat(hat);
+                offlineCustomCosmeticsController?.SetHat(hat);
 
                 if (PhotonNetwork.InRoom)
                 {
@@ -382,7 +393,7 @@ namespace GorillaCosmetics.UI
 
 			CurrentHat = null;
 
-            offlineCustomCosmeticsController.ResetHat();
+            offlineCustomCosmeticsController?.ResetHat();
 
             if (PhotonNetwork.InRoom)
             {
@@ -407,7 +418,7 @@ namespace GorillaCosmetics.UI
 
 				CurrentMaterial = material;
 
-                offlineCustomCosmeticsController.SetMaterial(material);
+                offlineCustomCosmeticsController?.SetMaterial(material);
 
                 if (PhotonNetwork.InRoom)
                 {
@@ -428,7 +439,7 @@ namespace GorillaCosmetics.UI
 
 			CurrentMaterial = null;
 
-            offlineCustomCosmeticsController.ResetMaterial();
+            offlineCustomCosmeticsController?.ResetMaterial();
 
             if (PhotonNetwork.InRoom)
             {

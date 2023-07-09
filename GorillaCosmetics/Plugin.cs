@@ -18,10 +18,9 @@ namespace GorillaCosmetics
         public static ISelectionManager SelectionManager { get; private set; }
         public static ICosmeticsNetworker CosmeticsNetworker { get; private set; }
 
-        void Start()
+        void Awake()
         {
             Utilla.Events.GameInitialized += OnGameInitialized;
-
             GorillaCosmeticsPatches.ApplyHarmonyPatches();
 		}
 

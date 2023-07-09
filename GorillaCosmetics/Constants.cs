@@ -17,6 +17,6 @@ namespace GorillaCosmetics
 
 		public static readonly Vector3 PreviewOrbHeadModelLocalPositionOffset = new Vector3(-0.6f, 0, 0f);
 
-		public static readonly Vector3 EnableButtonLocalPositionOffset = new Vector3(0, 0, 0.12f);
+		public static readonly Vector3 EnableButtonLocalPositionOffset = new Vector3(0, 0.12f, 0f);
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace GorillaCosmetics.UI
 {
@@ -25,7 +26,8 @@ namespace GorillaCosmetics.UI
 			offText = wardrobeItemButton.offText;
 			onText = wardrobeItemButton.onText;
 			myText = wardrobeItemButton.myText;
-		}
+			onPressButton = new UnityEvent();
+        }
 
 		public void OnDestroy()
 		{
@@ -37,11 +39,6 @@ namespace GorillaCosmetics.UI
 					child.gameObject.SetActive(true);
 				}
 			}
-		}
-
-		public override void ButtonActivation()
-		{
-			base.ButtonActivation();
 		}
 	}
 }
