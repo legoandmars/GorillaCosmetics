@@ -4,7 +4,7 @@ using System.IO.Compression;
 using System.IO;
 using System.Linq;
 using GorillaCosmetics.Data;
-using Valve.Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace GorillaCosmetics.Utils
 {
