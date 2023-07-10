@@ -1,14 +1,15 @@
 ﻿using HarmonyLib;
 using GorillaNetworking;
 using GorillaCosmetics.Utils;
+using GorillaCosmetics.UI;
 
 namespace GorillaCosmetics.HarmonyPatches.Patches
 {
 	[HarmonyPatch(typeof(CosmeticsController))]
 	[HarmonyPatch("PressWardrobeItemButton", MethodType.Normal)]
-	internal class WardrobeButtonPressPatch
+	internal class WardrobeItemButtonPatch
 	{
-		internal static void Postfix(CosmeticsController __instance, CosmeticsController.CosmeticItem cosmeticItem, bool isLeftHand)
+		internal static void Postfix(CosmeticsController __instance, CosmeticsController.CosmeticItem cosmeticItem)
 		{
 			if (CosmeticItemUtils.ContainsHat(cosmeticItem))
 			{
@@ -22,7 +23,7 @@ namespace GorillaCosmetics.HarmonyPatches.Patches
 	[HarmonyPatch("PressFittingRoomButton", MethodType.Normal)]
 	internal class FittingRoomButtonPressPatch
 	{
-		internal static void Postfix(CosmeticsController __instance, FittingRoomButton pressedFittingRoomButton, bool isLeftHand)
+		internal static void Postfix(CosmeticsController __instance, FittingRoomButton pressedFittingRoomButton)
 		{
 			if (CosmeticItemUtils.ContainsHat(pressedFittingRoomButton.currentCosmeticItem))
 			{
@@ -30,6 +31,14 @@ namespace GorillaCosmetics.HarmonyPatches.Patches
                 __instance.UpdateShoppingCart();
             }
 		}
+	}
+
+	[HarmonyPatch(typeof(CosmeticsController))]
+	[HarmonyPatch("PressWardrobeFunctionButton", MethodType.Normal)]
+	internal class WardrobeFunctionButtonPatch
+	{
+		internal static bool Prefix(string function)
+			=> !(ToggleEnableButton.isEnabled && (function == "left" || function == "right"));
 	}
 
 	// This doesn't account for purchasing cosmetics with shiny rocks.

@@ -3,6 +3,7 @@
 	public class ToggleEnableButton : GorillaPressableButton
 	{
 		bool sendButton = false;
+		public static bool isEnabled;
 
 		public void Awake()
 		{
@@ -30,10 +31,12 @@
 				if (isOn)
 				{
 					Plugin.SelectionManager.Enable();
-				} else
+					isEnabled = true;
+                } else
 				{
 					Plugin.SelectionManager.Disable();
-				}
+                    isEnabled = false;
+                }
 			}
 		}
 
