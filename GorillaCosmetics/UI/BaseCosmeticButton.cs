@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 namespace GorillaCosmetics.UI
 {
-	public class BaseCosmeticButton : GorillaPressableButton
+    public class BaseCosmeticButton : GorillaPressableButton
 	{
 		protected WardrobeItemButton wardrobeItemButton;
 

@@ -1,5 +1,4 @@
 ﻿using GorillaCosmetics.Data;
-using UnityEngine;
 
 namespace GorillaCosmetics
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GorillaCosmetics.UI
+﻿namespace GorillaCosmetics.UI
 {
 	public class ToggleEnableButton : GorillaPressableButton
 	{

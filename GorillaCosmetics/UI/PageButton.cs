@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GorillaCosmetics.UI
+﻿namespace GorillaCosmetics.UI
 {
 	/// <remarks>
 	/// The original WardrobeFunctionButton is left alone, it handles all of the the visual aspects.

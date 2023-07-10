@@ -11,7 +11,7 @@ namespace GorillaCosmetics.HarmonyPatches
         private static Harmony instance;
 
         public static bool IsPatched { get; private set; }
-        public const string InstanceId = "com.legoandmars.gorillatag.gorillacosmeticsa";
+        public const string InstanceId = "org.legoandmars.gorillatag.gorillacosmetics";
 
         internal static void ApplyHarmonyPatches()
         {
