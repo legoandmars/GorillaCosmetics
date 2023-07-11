@@ -37,8 +37,8 @@ namespace GorillaCosmetics.HarmonyPatches.Patches
 	[HarmonyPatch("PressWardrobeFunctionButton", MethodType.Normal)]
 	internal class WardrobeFunctionButtonPatch
 	{
-		internal static bool Prefix(string function)
-			=> !(ToggleEnableButton.isEnabled && (function == "left" || function == "right"));
+		internal static bool Prefix()
+			=> !ToggleEnableButton.isEnabled;
 	}
 
 	// This doesn't account for purchasing cosmetics with shiny rocks.
