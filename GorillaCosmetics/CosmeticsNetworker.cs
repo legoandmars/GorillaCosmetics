@@ -1,5 +1,6 @@
 ﻿using System;
 using GorillaCosmetics.Data;
+using GorillaExtensions;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -45,8 +46,8 @@ namespace GorillaCosmetics
 
 				if (GorillaGameManager.instance == null) return;
 				var customCosmeticsControllerObject = GorillaGameManager.instance.FindPlayerVRRig(targetPlayer);
-				var customCosmeticsController = customCosmeticsControllerObject.GetComponent<ICustomCosmeticsController>();
-				customCosmeticsController ??= customCosmeticsControllerObject.gameObject.AddComponent<CustomCosmeticsController>();
+				var customCosmeticsController = customCosmeticsControllerObject.gameObject.GetOrAddComponent<CustomCosmeticsController>();
+				//customCosmeticsController ??= customCosmeticsControllerObject.gameObject.AddComponent<CustomCosmeticsController>();
 
                 if (changedProps.TryGetValue(CustomHatKey, out var hatObj))
 				{

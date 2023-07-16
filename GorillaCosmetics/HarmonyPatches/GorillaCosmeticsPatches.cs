@@ -1,4 +1,6 @@
-﻿using HarmonyLib;
+﻿using GorillaCosmetics.HarmonyPatches.Patches;
+using HarmonyLib;
+using System;
 using System.Reflection;
 
 namespace GorillaCosmetics.HarmonyPatches
@@ -17,12 +19,13 @@ namespace GorillaCosmetics.HarmonyPatches
         {
             if (!IsPatched)
             {
-                if (instance == null)
-                {
-                    instance = new Harmony(InstanceId);
-                }
+                instance ??= new Harmony(InstanceId);
 
                 instance.PatchAll(Assembly.GetExecutingAssembly());
+                Type RigSerializeType = typeof(GorillaTagger).Assembly.GetType("VRRigSerializer");
+                instance.Patch(RigSerializeType.GetMethod("OnInstantiateSetup", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreReturn), postfix: new HarmonyMethod(typeof(CustomCosmeticsControllerPatches), nameof(CustomCosmeticsControllerPatches.InstantiateSetupPatch)));
+                instance.Patch(RigSerializeType.GetMethod("CleanUp", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreReturn), prefix: new HarmonyMethod(typeof(CustomCosmeticsControllerPatches), nameof(CustomCosmeticsControllerPatches.CleanUpPatch)));
+
                 IsPatched = true;
             }
         }

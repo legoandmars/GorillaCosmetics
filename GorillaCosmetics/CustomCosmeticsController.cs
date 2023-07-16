@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace GorillaCosmetics
 {
+	[DisallowMultipleComponent]
 	public class CustomCosmeticsController : MonoBehaviourPunCallbacks, ICustomCosmeticsController
 	{
 		public int MatIndex { get; private set; }
@@ -18,30 +19,29 @@ namespace GorillaCosmetics
 		GameObject currentHatObject;
 		Material defaultMaterial;
 
-		VRRig rig;
-		Player currentPlayer;
+		VRRig Rig;
+		bool Initalized;
+        public Player Player;
 
         void Start()
 		{
-			rig = GetComponent<VRRig>();
+			if (Initalized) return;
+			Initalized = true;
+            TryGetComponent(out Rig);
 
-			var tempMatArray = rig.materialsToChangeTo;
-			rig.materialsToChangeTo = new Material[tempMatArray.Length + 1];
+			var tempMatArray = Rig.materialsToChangeTo;
+			Rig.materialsToChangeTo = new Material[tempMatArray.Length + 1];
 
 			for (int index = 0; index < tempMatArray.Length; index++) {
-				rig.materialsToChangeTo[index] = tempMatArray[index];
+				Rig.materialsToChangeTo[index] = tempMatArray[index];
 			}
 
-			MatIndex = rig.materialsToChangeTo.Length - 1;
-			defaultMaterial = rig.materialsToChangeTo[0];
-			rig.materialsToChangeTo[MatIndex] = tempMatArray[0];
+			MatIndex = Rig.materialsToChangeTo.Length - 1;
+			defaultMaterial = Rig.materialsToChangeTo[0];
+			Rig.materialsToChangeTo[MatIndex] = tempMatArray[0];
 
-            currentPlayer = Traverse.Create(rig).Field("creator").GetValue() as Player;
-            if (currentPlayer != null)
-			{
-				Plugin.CosmeticsNetworker.OnPlayerPropertiesUpdate(currentPlayer, currentPlayer.CustomProperties);
-			}
-		}
+			if (Player != null) Plugin.CosmeticsNetworker.OnPlayerPropertiesUpdate(Player, Player.CustomProperties);
+        }
 
 		public void SetHat(GorillaHat hat)
 		{
@@ -51,7 +51,7 @@ namespace GorillaCosmetics
 				return;
 			}
 
-			Plugin.Log($"Player: {rig.playerText.text} switching hat from {CurrentHat?.Descriptor?.Name} to {hat?.Descriptor?.Name}");
+			Plugin.Log($"Player: {Rig.playerText.text} switching hat from {CurrentHat?.Descriptor?.Name} to {hat?.Descriptor?.Name}");
 			CurrentHat = hat;
 
 			if (currentHatObject != null)
@@ -60,7 +60,7 @@ namespace GorillaCosmetics
 			}
 
 			currentHatObject = hat.GetAsset();
-			currentHatObject.transform.SetParent(rig.head.rigTarget);
+			currentHatObject.transform.SetParent(Rig.head.rigTarget);
 			currentHatObject.transform.localScale = Vector3.one * 0.25f;
 			currentHatObject.transform.localPosition = new Vector3(0, 0.365f, 0.04f);
 			currentHatObject.transform.localRotation = Quaternion.Euler(0, 90, 10);
@@ -70,7 +70,7 @@ namespace GorillaCosmetics
 
 		public void ResetHat()
 		{
-			Plugin.Log($"Player: {rig.playerText.text} resetting hat");
+			Plugin.Log($"Player: {Rig.playerText.text} resetting hat");
 
 			if (currentHatObject != null)
 			{
@@ -89,7 +89,7 @@ namespace GorillaCosmetics
 				return;
 			}
 
-			Plugin.Log($"Player: {rig.playerText.text} switching material from {CurrentMaterial?.Descriptor?.Name} to {material?.Descriptor?.Name}");
+			Plugin.Log($"Player: {Rig.playerText.text} switching material from {CurrentMaterial?.Descriptor?.Name} to {material?.Descriptor?.Name}");
 
 			CurrentMaterial = material;
 			SetVRRigMaterial(material.GetMaterial());
@@ -97,7 +97,7 @@ namespace GorillaCosmetics
 
 		public void ResetMaterial()
 		{
-			Plugin.Log($"Player: {rig.playerText.text} resetting material");
+			Plugin.Log($"Player: {Rig.playerText.text} resetting material");
 
 			if (defaultMaterial != null)
 			{
@@ -109,51 +109,29 @@ namespace GorillaCosmetics
 
 		public void SetColor(float red, float green, float blue)
 		{
-			if (rig == null) return;
-			Plugin.Log($"Player: {rig.playerText.text} changing color to {red}, {green}, {blue}");
+			if (Rig == null) return;
+			Plugin.Log($"Player: {Rig.playerText.text} changing color to {red}, {green}, {blue}");
 
 			Color newColor = new Color(red, green, blue);
 			defaultMaterial.color = newColor;
 
 			if (CurrentMaterial != null) 
 			{
-				Material myMat = rig.materialsToChangeTo[MatIndex];
+				Material myMat = Rig.materialsToChangeTo[MatIndex];
 				if (myMat != null && CurrentMaterial.Descriptor.CustomColors && myMat.HasProperty("_Color")) myMat.color = newColor;
             }
 		}
 
 		void SetVRRigMaterial(Material material)
 		{
-			rig.materialsToChangeTo[MatIndex] = material;
+			Rig.materialsToChangeTo[MatIndex] = material;
 
-			if (rig.currentMatIndex == 0)
+			if (Rig.setMatIndex == 0)
 			{
-				rig.ChangeMaterialLocal(0);
+				Rig.ChangeMaterialLocal(0);
 			}
 
-			rig.InitializeNoobMaterialLocal(defaultMaterial.color.r, defaultMaterial.color.g, defaultMaterial.color.b, GorillaComputer.instance.leftHanded);
+			Rig.InitializeNoobMaterialLocal(defaultMaterial.color.r, defaultMaterial.color.g, defaultMaterial.color.b, GorillaComputer.instance.leftHanded);
 		}
-
-        public override void OnLeftRoom()
-        {
-            base.OnLeftRoom();
-
-			if (currentPlayer != null && !currentPlayer.IsLocal)
-			{
-                ResetHat();
-                ResetMaterial();
-			}
-        }
-
-        public override void OnPlayerLeftRoom(Player otherPlayer)
-        {
-            base.OnPlayerLeftRoom(otherPlayer);
-
-			if (otherPlayer == currentPlayer)
-			{
-                ResetHat();
-                ResetMaterial();
-            }
-        }
     }
 }
