@@ -164,8 +164,7 @@ namespace GorillaCosmetics.UI
 			mirror?.SetActive(false);
 
 			CosmeticsController.instance.PressWardrobeFunctionButton("hat");
-			CosmeticsController.instance.PressWardrobeFunctionButton("right");
-			CosmeticsController.instance.PressWardrobeFunctionButton("left");
+			CosmeticsController.instance.UpdateWardrobeModelsAndButtons();
 		}
 
 		public void Enable()
