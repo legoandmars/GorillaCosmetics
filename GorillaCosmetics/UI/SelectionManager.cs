@@ -219,7 +219,7 @@ namespace GorillaCosmetics.UI
 			{
 				if (mirror == null)
 				{
-					mirror = GameObject.Find("Level/lower level/mirror (1)/"); // The lower level object isn't in the forest object anymore
+					mirror = GameObject.Find("Environment Objects/LocalObjects_Prefab/TreeRoom/TreeRoomInteractables/mirror (1)/"); // The lower level object isn't in the forest object anymore
 				}
 
 				if (mirror != null)
