@@ -1,9 +1,10 @@
 ﻿using GorillaCosmetics.Data;
 using GorillaNetworking;
+using Photon.Pun;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace GorillaCosmetics.UI
@@ -23,9 +24,9 @@ namespace GorillaCosmetics.UI
 		ISelectionManager.SelectionView view;
 
 		ICustomCosmeticsController offlineCustomCosmeticsController;
-		ICustomCosmeticsController onlineCustomCosmeticsController => GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: ew
+		ICustomCosmeticsController onlineCustomCosmeticsController { get; set; }
 
-		CosmeticsController.Wardrobe wardrobe;
+        CosmeticsController.Wardrobe wardrobe;
 		GameObject mirror;
 
 		List<GorillaHat> hats;
@@ -52,36 +53,44 @@ namespace GorillaCosmetics.UI
 		public SelectionManager()
 		{
 			offlineCustomCosmeticsController = GorillaTagger.Instance.offlineVRRig.GetComponent<ICustomCosmeticsController>();
-			hats = Plugin.AssetLoader.GetAssets<GorillaHat>();
+            offlineCustomCosmeticsController ??= GorillaTagger.Instance.offlineVRRig.gameObject.AddComponent<CustomCosmeticsController>();
+
+            hats = Plugin.AssetLoader.GetAssets<GorillaHat>();
 			materials = Plugin.AssetLoader.GetAssets<GorillaMaterial>();
 
 			wardrobe = CosmeticsController.instance.wardrobes[1];
 
-			var hatString = PlayerPrefs.GetString(HatPlayerPrefKey, "NOTHING");
-			var matString = PlayerPrefs.GetString(MaterialPlayerPrefKey, "NOTHING");
+            CreateEnableButton();
+            RestorePrefItems(); // "Restore" them after we've created the button
+        }
 
-			if (hatString.StartsWith(PlayerPrefsPrefix))
-			{
-				var hat = Plugin.AssetLoader.GetAsset<GorillaHat>(hatString.Substring(PlayerPrefsPrefix.Length));
-				if (hat != null)
-				{
-					SetHat(hat);
-				}
-			}
+		async void RestorePrefItems()
+		{
+            await Task.Delay(400);
 
-			if (matString.StartsWith(PlayerPrefsPrefix))
-			{
-				var mat = Plugin.AssetLoader.GetAsset<GorillaMaterial>(matString.Substring(PlayerPrefsPrefix.Length));
-				if (mat != null)
-				{
-					SetMaterial(mat);
-				}
-			}
+            var hatString = PlayerPrefs.GetString(HatPlayerPrefKey, "NOTHING");
+            var matString = PlayerPrefs.GetString(MaterialPlayerPrefKey, "NOTHING");
 
-			CreateEnableButton();
-		}
+            if (hatString.StartsWith(PlayerPrefsPrefix))
+            {
+                var hat = Plugin.AssetLoader.GetAsset<GorillaHat>(hatString.Substring(PlayerPrefsPrefix.Length));
+                if (hat != null)
+                {
+                    SetHat(hat);
+                }
+            }
 
-		void CreateEnableButton()
+            if (matString.StartsWith(PlayerPrefsPrefix))
+            {
+                var mat = Plugin.AssetLoader.GetAsset<GorillaMaterial>(matString.Substring(PlayerPrefsPrefix.Length));
+                if (mat != null)
+                {
+                    SetMaterial(mat);
+                }
+            }
+        }
+
+        void CreateEnableButton()
 		{
 			GameObject template = null;
 
@@ -106,13 +115,13 @@ namespace GorillaCosmetics.UI
 			GameObject button = GameObject.Instantiate(template, template.transform.parent);
 			button.name = "ToggleEnableButton";
 			button.GetComponent<MeshFilter>().mesh = meshFilter.mesh;
-			button.GetComponent<Renderer>().material = Resources.Load<Material>("objects/treeroom/materials/plastic");
-			button.transform.localPosition = template.transform.localPosition + Constants.EnableButtonLocalPositionOffset;
+            button.transform.localPosition = template.transform.localPosition + Constants.EnableButtonLocalPositionOffset;
 			button.transform.localRotation = template.transform.localRotation;
 			button.transform.localScale = template.transform.localScale;
 
 			WardrobeFunctionButton hatFunctionButton = button.GetComponent<WardrobeFunctionButton>();
-			var templateText = hatFunctionButton.myText;
+			button.GetComponent<Renderer>().material = hatFunctionButton.unpressedMaterial;
+            var templateText = hatFunctionButton.myText;
 			var newText = GameObject.Instantiate(templateText, templateText.transform.parent);
 			newText.transform.localPosition = templateText.transform.localPosition + Constants.EnableButtonLocalPositionOffset;
 			newText.transform.localRotation = templateText.transform.localRotation;
@@ -124,7 +133,7 @@ namespace GorillaCosmetics.UI
 			GameObject.Destroy(cube);
 		}
 
-		public void Disable()
+        public void Disable()
 		{
 			foreach (var button in wardrobe.wardrobeItemButtons)
 			{
@@ -155,8 +164,7 @@ namespace GorillaCosmetics.UI
 			mirror?.SetActive(false);
 
 			CosmeticsController.instance.PressWardrobeFunctionButton("hat");
-			CosmeticsController.instance.PressWardrobeFunctionButton("right");
-			CosmeticsController.instance.PressWardrobeFunctionButton("left");
+			CosmeticsController.instance.UpdateWardrobeModelsAndButtons();
 		}
 
 		public void Enable()
@@ -172,11 +180,13 @@ namespace GorillaCosmetics.UI
 					{
 						var pageButton = transform.gameObject.AddComponent<PageButton>();
 						pageButton.Forward = false;
+						pageButton.onPressButton = new UnityEngine.Events.UnityEvent();
 						pageButtons.Add(pageButton);
 					} else if (lowerName.Contains("right"))
 					{
 						var pageButton = transform.gameObject.AddComponent<PageButton>();
-						pageButton.Forward = true;
+                        pageButton.onPressButton = new UnityEngine.Events.UnityEvent();
+                        pageButton.Forward = true;
 						pageButtons.Add(pageButton);
 					} else if (lowerName.Contains("hat"))
 					{
@@ -209,7 +219,7 @@ namespace GorillaCosmetics.UI
 			{
 				if (mirror == null)
 				{
-					mirror = GameObject.Find("Level/forest/lower level/mirror (1)");
+					mirror = GameObject.Find("Environment Objects/LocalObjects_Prefab/TreeRoom/TreeRoomInteractables/mirror (1)/"); // The lower level object isn't in the forest object anymore
 				}
 
 				if (mirror != null)
@@ -219,10 +229,13 @@ namespace GorillaCosmetics.UI
 					{
 						collider.enabled = false;
 					}
-				}
+
+                    mirror.GetComponentInChildren<Camera>().cullingMask = GorillaTagger.Instance.mainCamera.GetComponent<Camera>().cullingMask;
+                }
 
 				mirror?.SetActive(true);
-			} catch (Exception e)
+
+            } catch (Exception e)
 			{
 				Debug.LogError($"GorillaCosmetics: Failed to show mirror: {e}");
 			}
@@ -356,10 +369,16 @@ namespace GorillaCosmetics.UI
 				PlayerPrefs.Save();
 
 				CurrentHat = hat;
-				offlineCustomCosmeticsController.SetHat(hat);
-				onlineCustomCosmeticsController?.SetHat(hat);
 
-				UpdateHeadModel();
+                offlineCustomCosmeticsController?.SetHat(hat);
+
+                if (PhotonNetwork.InRoom)
+                {
+                    onlineCustomCosmeticsController = GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: could be improved lol
+                    onlineCustomCosmeticsController?.SetHat(hat);
+                }
+
+                UpdateHeadModel();
 
 				OnCosmeticsUpdated?.Invoke();
 			}
@@ -371,10 +390,16 @@ namespace GorillaCosmetics.UI
 			PlayerPrefs.Save();
 
 			CurrentHat = null;
-			offlineCustomCosmeticsController.ResetHat();
-			onlineCustomCosmeticsController?.ResetHat();
 
-			UpdateHeadModel();
+            offlineCustomCosmeticsController?.ResetHat();
+
+            if (PhotonNetwork.InRoom)
+            {
+                onlineCustomCosmeticsController = GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: could be improved lol
+                onlineCustomCosmeticsController?.ResetHat();
+            }
+
+            UpdateHeadModel();
 
 			OnCosmeticsUpdated?.Invoke();
 		}
@@ -390,10 +415,16 @@ namespace GorillaCosmetics.UI
 				PlayerPrefs.Save();
 
 				CurrentMaterial = material;
-				offlineCustomCosmeticsController.SetMaterial(material);
-				onlineCustomCosmeticsController?.SetMaterial(material);
 
-				UpdateHeadModel();
+                offlineCustomCosmeticsController?.SetMaterial(material);
+
+                if (PhotonNetwork.InRoom)
+                {
+                    onlineCustomCosmeticsController = GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: could be improved lol
+                    onlineCustomCosmeticsController?.SetMaterial(material);
+                }
+
+                UpdateHeadModel();
 
 				OnCosmeticsUpdated?.Invoke();
 			}
@@ -405,22 +436,62 @@ namespace GorillaCosmetics.UI
 			PlayerPrefs.Save();
 
 			CurrentMaterial = null;
-			offlineCustomCosmeticsController.ResetMaterial();
-			onlineCustomCosmeticsController?.ResetMaterial();
 
-			UpdateHeadModel();
+            offlineCustomCosmeticsController?.ResetMaterial();
+
+            if (PhotonNetwork.InRoom)
+            {
+                onlineCustomCosmeticsController = GorillaTagger.Instance?.myVRRig?.GetComponent<ICustomCosmeticsController>(); // TODO: could be improved lol
+                onlineCustomCosmeticsController?.ResetMaterial();
+            }
+
+            UpdateHeadModel();
 
 			OnCosmeticsUpdated?.Invoke();
 		}
 
 		void ResetGameHat()
 		{
-			if (CosmeticsController.instance.currentWornSet.hat.itemName != CosmeticsController.instance.nullItem.itemName)
+			try
 			{
-				CosmeticsController.instance.currentWornSet.hat = CosmeticsController.instance.nullItem;
-				CosmeticsController.instance.tryOnSet.hat = CosmeticsController.instance.nullItem;
-				CosmeticsController.instance.UpdateShoppingCart();
+				bool updateCart = false;
+
+				var nullItem = CosmeticsController.instance.nullItem;
+
+				var items = CosmeticsController.instance.currentWornSet.items;
+				for (int i = 0; i < items.Length; i++)
+				{
+					if (items[i].itemCategory == CosmeticsController.CosmeticCategory.Hat && !items[i].isNullItem)
+					{
+						updateCart = true;
+						items[i] = nullItem;
+                    }
+				}
+
+				items = CosmeticsController.instance.tryOnSet.items;
+				for (int i = 0; i < items.Length; i++)
+				{
+					if (items[i].itemCategory == CosmeticsController.CosmeticCategory.Hat && !items[i].isNullItem)
+					{
+						updateCart = true;
+						items[i] = nullItem;
+					}
+				}
+
+                // TODO: Check if this call is necessary
+                if (updateCart)
+				{
+					CosmeticsController.instance.UpdateShoppingCart();
+					CosmeticsController.instance.UpdateWornCosmetics(true);
+
+                    PlayerPrefs.SetString(CosmeticsController.CosmeticSet.SlotPlayerPreferenceName(CosmeticsController.CosmeticSlots.Hat), nullItem.itemName);
+                    PlayerPrefs.Save();
+                }
 			}
-		}
+			catch (Exception e)
+			{
+				Debug.LogError($"GorillaCosmetics: Failed to remove game hat: {e}");
+			}
+        }
 	}
 }

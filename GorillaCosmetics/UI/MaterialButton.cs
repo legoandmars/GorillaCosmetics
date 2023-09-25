@@ -1,7 +1,4 @@
 ﻿using GorillaCosmetics.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace GorillaCosmetics.UI

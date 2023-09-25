@@ -1,27 +1,21 @@
-using System;
 using UnityEngine;
 using HarmonyLib;
-
 using GorillaNetworking;
+using GorillaExtensions;
 
 namespace GorillaCosmetics.HarmonyPatches.Patches
 {
 	[HarmonyPatch(typeof(VRRig))]
-	[HarmonyPatch("InitializeNoobMaterialLocal", MethodType.Normal)]
+	[HarmonyPatch("SetColor", MethodType.Normal), HarmonyWrapSafe]
 	internal class ColorPatch
 	{
-		internal static bool Prefix(VRRig __instance, float red, float green, float blue)
+		internal static bool Prefix(VRRig __instance, Color color)
 		{
-			var controller = __instance.gameObject.GetComponent<ICustomCosmeticsController>();
-			if (controller == null) 
-			{
-				return true;
-			}
+			var controller = __instance.gameObject.GetOrAddComponent<CustomCosmeticsController>();
+            controller.SetColor(color.r, color.g, color.b);
 
-			controller.SetColor(red, green, blue);
-
-			Photon.Pun.PhotonView photView = __instance.photonView;
-			if (photView != null) 
+			Photon.Pun.PhotonView photView = (Photon.Pun.PhotonView)AccessTools.Field(__instance.GetType(), "photonView").GetValue(__instance);
+			if (photView != null && !__instance.isOfflineVRRig) 
 			{
 				__instance.playerText.text = __instance.NormalizeName(true, photView.Owner.NickName);
 			} 
@@ -49,7 +43,7 @@ namespace GorillaCosmetics.HarmonyPatches.Patches
 	{
 		internal static bool Prefix(GorillaTagger __instance, ref float red, ref float green, ref float blue)
 		{
-			__instance.offlineVRRig.InitializeNoobMaterialLocal(red, green, blue, GorillaComputer.instance.leftHanded);
+			__instance.offlineVRRig.InitializeNoobMaterialLocal(red, green, blue, GorillaComputer.instance?.leftHanded ?? false);
 			__instance.offlineVRRig.ChangeMaterialLocal(0);
 			return false;
 		}

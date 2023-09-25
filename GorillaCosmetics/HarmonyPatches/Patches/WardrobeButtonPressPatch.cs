@@ -1,21 +1,20 @@
 ﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using GorillaNetworking;
 using GorillaCosmetics.Utils;
+using GorillaCosmetics.UI;
 
 namespace GorillaCosmetics.HarmonyPatches.Patches
 {
 	[HarmonyPatch(typeof(CosmeticsController))]
 	[HarmonyPatch("PressWardrobeItemButton", MethodType.Normal)]
-	internal class WardrobeButtonPressPatch
+	internal class WardrobeItemButtonPatch
 	{
 		internal static void Postfix(CosmeticsController __instance, CosmeticsController.CosmeticItem cosmeticItem)
 		{
 			if (CosmeticItemUtils.ContainsHat(cosmeticItem))
 			{
 				Plugin.SelectionManager.ResetHat();
+				__instance.UpdateShoppingCart();
 			}
 		}
 	}
@@ -29,8 +28,17 @@ namespace GorillaCosmetics.HarmonyPatches.Patches
 			if (CosmeticItemUtils.ContainsHat(pressedFittingRoomButton.currentCosmeticItem))
 			{
 				Plugin.SelectionManager.ResetHat();
-			}
+                __instance.UpdateShoppingCart();
+            }
 		}
+	}
+
+	[HarmonyPatch(typeof(CosmeticsController))]
+	[HarmonyPatch("PressWardrobeFunctionButton", MethodType.Normal)]
+	internal class WardrobeFunctionButtonPatch
+	{
+		internal static bool Prefix()
+			=> !ToggleEnableButton.isEnabled;
 	}
 
 	// This doesn't account for purchasing cosmetics with shiny rocks.

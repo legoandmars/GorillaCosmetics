@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GorillaCosmetics.UI
+﻿namespace GorillaCosmetics.UI
 {
 	public class ToggleEnableButton : GorillaPressableButton
 	{
 		bool sendButton = false;
+		public static bool isEnabled;
 
 		public void Awake()
 		{
@@ -23,7 +20,8 @@ namespace GorillaCosmetics.UI
 			offText = "CUSTOM";
 			onText = "CUSTOM";
 			myText.text = "CUSTOM";
-		}
+			onPressButton = new UnityEngine.Events.UnityEvent();
+        }
 
 		public void Update()
 		{
@@ -33,10 +31,12 @@ namespace GorillaCosmetics.UI
 				if (isOn)
 				{
 					Plugin.SelectionManager.Enable();
-				} else
+					isEnabled = true;
+                } else
 				{
 					Plugin.SelectionManager.Disable();
-				}
+                    isEnabled = false;
+                }
 			}
 		}
 

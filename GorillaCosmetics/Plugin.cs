@@ -1,11 +1,7 @@
 ﻿using BepInEx;
-using BepInEx.Configuration;
 using GorillaCosmetics.HarmonyPatches;
 using GorillaCosmetics.UI;
-using GorillaNetworking;
-using HarmonyLib;
 using System;
-using System.IO;
 using UnityEngine;
 
 namespace GorillaCosmetics
@@ -18,10 +14,9 @@ namespace GorillaCosmetics
         public static ISelectionManager SelectionManager { get; private set; }
         public static ICosmeticsNetworker CosmeticsNetworker { get; private set; }
 
-        void Start()
+        void Awake()
         {
             Utilla.Events.GameInitialized += OnGameInitialized;
-
             GorillaCosmeticsPatches.ApplyHarmonyPatches();
 		}
 

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace GorillaCosmetics.UI
@@ -30,7 +28,8 @@ namespace GorillaCosmetics.UI
 			myText = wardrobeFunctionButton.myText;
 
 			defaultText = myText.text;
-		}
+            onPressButton = new UnityEngine.Events.UnityEvent();
+        }
 
 		public void OnDestroy()
 		{

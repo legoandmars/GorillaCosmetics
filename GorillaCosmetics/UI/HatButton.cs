@@ -1,7 +1,4 @@
 ﻿using GorillaCosmetics.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace GorillaCosmetics.UI
@@ -20,7 +17,7 @@ namespace GorillaCosmetics.UI
 				if (Plugin.SelectionManager.CurrentHat == Hat)
 				{
 					Plugin.SelectionManager.ResetHat();
-				} else
+               } else
 				{
 					Plugin.SelectionManager.SetHat(Hat);
 				}
