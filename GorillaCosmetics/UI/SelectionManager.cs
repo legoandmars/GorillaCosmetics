@@ -482,6 +482,7 @@ namespace GorillaCosmetics.UI
                 if (updateCart)
 				{
 					CosmeticsController.instance.UpdateShoppingCart();
+					CosmeticsController.instance.UpdateWornCosmetics(true);
 
                     PlayerPrefs.SetString(CosmeticsController.CosmeticSet.SlotPlayerPreferenceName(CosmeticsController.CosmeticSlots.Hat), nullItem.itemName);
                     PlayerPrefs.Save();
